@@ -18,10 +18,10 @@ namespace MyAssistant.Domain.Base
         public Guid UserId { get; set; } = default!;
 
         [Required]
-        public DateTime EventDate { get; set; }
+        public DateTime EventDate { get; set; } = DateTime.Now;
 
         [StringLength(100)]
-        public string? Action { get; set; } // e.g. "Create", "Update", "Delete"
+        public Actions Action { get; set; } // e.g. "Create", "Update", "Delete"
 
         public virtual ICollection<HistoryEntry> HistoryEntries { get; set; } = new List<HistoryEntry>();
 
@@ -33,6 +33,14 @@ namespace MyAssistant.Domain.Base
         {
             EntityId = entity.Id;
             EntityType = entity.GetType().Name;
+            Id = Guid.NewGuid();
+        }
+
+        public enum Actions
+        {
+            Create,
+            Delete,
+            Update
         }
     }
 }

@@ -6,6 +6,9 @@ namespace MyAssistant.Domain.Models
 {
     public class ShoppingList : AuditableEntity, IShareable, IBillable
     {
+        [Required]
+        public Guid UserId { get; set; }
+
         [Required, StringLength(200)]
         public string Name { get; set; } = string.Empty;
 

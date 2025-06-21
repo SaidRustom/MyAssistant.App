@@ -6,7 +6,7 @@ namespace MyAssistant.Domain.Models
     public class Notification : AuditableEntity
     {
         [Required]
-        public string UserId { get; set; } = default!;
+        public Guid UserId { get; set; } 
 
         [Required, StringLength(200)]
         public string Title { get; set; } = default!;
