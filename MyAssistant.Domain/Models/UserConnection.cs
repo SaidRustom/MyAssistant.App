@@ -6,9 +6,6 @@ namespace MyAssistant.Domain.Models
     public class UserConnection : AuditableEntity
     {
         [Required]
-        public string UserId { get; set; } = default!;
-
-        [Required]
         public string FriendUserId { get; set; } = default!;
 
         public RequestStatusType RequestStatus { get; set; }
