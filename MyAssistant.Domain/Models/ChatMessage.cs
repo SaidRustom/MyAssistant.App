@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
 using MyAssistant.Domain.Base;
 
 namespace MyAssistant.Domain.Models
@@ -6,10 +7,7 @@ namespace MyAssistant.Domain.Models
     public class ChatMessage : AuditableEntity
     {
         [Required]
-        public string SenderUserId { get; set; } = default!;
-
-        [Required]
-        public string ReceiverUserId { get; set; } = default!;
+        public Guid ReceiverUserId { get; set; }
 
         [Required]
         public string Content { get; set; } = default!;

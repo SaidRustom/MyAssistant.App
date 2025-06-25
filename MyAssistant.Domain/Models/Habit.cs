@@ -1,14 +1,12 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using MyAssistant.Domain.Base;
 using MyAssistant.Domain.Interfaces;
+using MyAssistant.Domain.Lookups;
 
 namespace MyAssistant.Domain.Models
 {
     public class Habit : AuditableEntity, IShareable
     {
-        [Required]
-        public Guid UserId { get; set; }
-
         [Required, StringLength(200)]
         public string Title { get; set; } = default!;
 
@@ -28,7 +26,7 @@ namespace MyAssistant.Domain.Models
 
         // IRecurrable implementation:
         public bool IsRecurring { get; set; }
-        public IRecurrable.RecurrenceType? RecurrencePattern { get; set; }
+        public int RecurrenceTypeCode { get; set; }
 
         // IShareable Implementation
         public virtual ICollection<EntityShare> Shares { get; set; } = new List<EntityShare>();

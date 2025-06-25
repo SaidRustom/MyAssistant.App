@@ -4,14 +4,11 @@ using MyAssistant.Domain.Base;
 namespace MyAssistant.Domain.Models
 {
     public class Notification : AuditableEntity
-    {
-        [Required]
-        public Guid UserId { get; set; } 
-
+    { 
         [Required, StringLength(200)]
         public string Title { get; set; } = default!;
 
-        [StringLength(1000)]
+        [StringLength(200)]
         public string? Message { get; set; }
 
         public bool IsRead { get; set; }

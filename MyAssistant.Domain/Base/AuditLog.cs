@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using MyAssistant.Domain.Lookups;
 
 namespace MyAssistant.Domain.Base
 {
@@ -15,13 +16,9 @@ namespace MyAssistant.Domain.Base
         public string EntityType { get; set; } = default!;
 
         [Required]
-        public Guid UserId { get; set; } = default!;
-
-        [Required]
         public DateTime EventDate { get; set; } = DateTime.Now;
 
-        [StringLength(100)]
-        public Actions Action { get; set; } // e.g. "Create", "Update", "Delete"
+        public int ActionTypeCode { get; set; } // e.g. "Create", "Update", "Delete"
 
         public virtual ICollection<HistoryEntry> HistoryEntries { get; set; } = new List<HistoryEntry>();
 
@@ -34,13 +31,6 @@ namespace MyAssistant.Domain.Base
             EntityId = entity.Id;
             EntityType = entity.GetType().Name;
             Id = Guid.NewGuid();
-        }
-
-        public enum Actions
-        {
-            Create,
-            Delete,
-            Update
         }
     }
 }

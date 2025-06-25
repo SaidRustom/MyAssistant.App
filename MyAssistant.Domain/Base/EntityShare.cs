@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using MyAssistant.Domain.Lookups;
 
 namespace MyAssistant.Domain.Base
 {
@@ -8,21 +9,33 @@ namespace MyAssistant.Domain.Base
     public class EntityShare : EntityBase
     {
         [Required]
-        public Guid EntityId { get; set; }
+        public Guid EntityId { get; protected set; }
+
+        public virtual EntityBase Entity { get; protected set; } = default!;
 
         [Required]
         [StringLength(100)]
-        public string EntityType { get; set; } = default!;
+        public string EntityType { get; protected set; } = default!;
 
         [Required]
-        public Guid SharedWithUserId { get; set; } = default!;
+        public Guid SharedWithUserId { get; protected set; } = default!;
 
         [Required]
-        [StringLength(100)]
-        public string? Permissions { get; set; } // e.g., "Read,Write"
+        public int PermissionTypeCode { get; set; } // e.g., "Read,Write"
+
+        public virtual PermissionType PermissionType { get; set; }
 
         [Required]
-        public DateTime SharedAt { get; set; } = DateTime.Now;
+        public DateTime SharedAt { get; protected set; } = DateTime.Now;
 
+        public EntityShare() { }
+
+        public EntityShare (EntityBase entity, Guid sharedWithUser)
+        {
+            Entity = entity;
+            EntityId = entity.Id;
+            SharedWithUserId = sharedWithUser;
+            EntityType = entity.GetType().Name;
+        }
     }
 }
