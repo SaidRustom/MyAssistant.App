@@ -10,6 +10,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MyAssistant.Persistence", "
 		{2FDC23DE-4898-493E-B375-80EF60680DCB} = {2FDC23DE-4898-493E-B375-80EF60680DCB}
 	EndProjectSection
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MyAssistant.Identity", "MyAssistant.Identity\MyAssistant.Identity.csproj", "{4FDD04B7-21F9-4C02-87BA-66E104C13067}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -24,6 +26,10 @@ Global
 		{08C520E3-2E4C-4D71-B57A-B7300A9F226C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{08C520E3-2E4C-4D71-B57A-B7300A9F226C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{08C520E3-2E4C-4D71-B57A-B7300A9F226C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4FDD04B7-21F9-4C02-87BA-66E104C13067}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4FDD04B7-21F9-4C02-87BA-66E104C13067}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4FDD04B7-21F9-4C02-87BA-66E104C13067}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4FDD04B7-21F9-4C02-87BA-66E104C13067}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
