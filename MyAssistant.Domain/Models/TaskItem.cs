@@ -4,7 +4,7 @@ using MyAssistant.Domain.Interfaces;
 
 namespace MyAssistant.Domain.Models
 {
-    public class TaskItem : AuditableEntity, IShareable, IRecurrable
+    public class TaskItem : AuditableEntity, IShareable<TaskItem>, IRecurrable
     {
         [Required, StringLength(200)]
         public string Title { get; set; } = default!;
@@ -21,6 +21,7 @@ namespace MyAssistant.Domain.Models
         // IRecurrable implementation:
         public bool IsRecurring { get; set; }
         public int? RecurrenceTypeCode { get; set; }
+        public DateTime? RecurrenceEndDate { get; set; }
 
         // IShareable Implementation
         public virtual ICollection<EntityShare> Shares { get; set; } = new List<EntityShare>();

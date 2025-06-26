@@ -1,5 +1,6 @@
 ﻿
 using System.ComponentModel.DataAnnotations;
+using MyAssistant.Domain.Interfaces;
 
 namespace MyAssistant.Domain.Base
 {
@@ -7,7 +8,7 @@ namespace MyAssistant.Domain.Base
     /// Base entity, uses Guid for Id
     /// </summary>
     [Serializable]
-    public abstract class EntityBase
+    public abstract class EntityBase : IEntityBase
     {
         [Key]
         public Guid Id { get; set; } = Guid.NewGuid();

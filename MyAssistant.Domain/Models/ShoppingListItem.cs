@@ -13,8 +13,6 @@ namespace MyAssistant.Domain.Models
 
         public bool IsActive { get; set; } = true;
 
-
-
         public decimal? UnitPrice { get; set; }
 
         public decimal? TotalPrice { get; set; }
@@ -24,6 +22,7 @@ namespace MyAssistant.Domain.Models
         // IRecurrable implementation:
         public bool IsRecurring { get; set; }
         public int? RecurrenceTypeCode { get; set; }
+        public DateTime? RecurrenceEndDate { get; set; }
 
         // Relationships
         [Required]

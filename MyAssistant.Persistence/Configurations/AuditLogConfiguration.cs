@@ -15,8 +15,8 @@ namespace MyAssistant.Persistence.Configurations
             builder.Property(x => x.UserId)
                 .IsRequired();
 
-            builder.Property(x => x.ActionType)
-                .HasMaxLength(100);
+            builder.Property(x => x.ActionTypeCode)
+                .IsRequired();
 
             builder.HasMany(x => x.HistoryEntries)
                 .WithOne(x => x.AuditLog)

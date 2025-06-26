@@ -4,7 +4,7 @@ using MyAssistant.Domain.Interfaces;
 
 namespace MyAssistant.Domain.Models
 {
-    public class Goal : AuditableEntity, IShareable
+    public class Goal : AuditableEntity, IShareable<Goal>, IBillable<Goal>
     {
         [Required, StringLength(200)]
         public string Title { get; set; } = default!;
@@ -19,6 +19,8 @@ namespace MyAssistant.Domain.Models
         public virtual ICollection<TaskItem> LinkedTasks { get; set; } = new List<TaskItem>();
         public virtual ICollection<Habit> LinkedHabits { get; set; } = new List<Habit>();
 
-        public virtual ICollection<EntityShare> Shares { get; set; } = new List<EntityShare>();
+        public virtual ICollection<EntityShare>? Shares { get; set; } = new List<EntityShare>();
+
+        public virtual ICollection<BillingInfo>? Bills { get; set; } = new List<BillingInfo>();
     }
 }
