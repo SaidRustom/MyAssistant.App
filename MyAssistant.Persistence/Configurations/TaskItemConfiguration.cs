@@ -15,7 +15,7 @@ namespace MyAssistant.Persistence.Configurations
             builder.Property(x => x.Description)
                 .HasMaxLength(1000);
 
-            builder.Property(x => x.RecurrencePattern)
+            builder.Property(x => x.RecurrenceTypeCode)
                 .HasMaxLength(100);
 
             builder.HasOne(x => x.LinkedGoal)
