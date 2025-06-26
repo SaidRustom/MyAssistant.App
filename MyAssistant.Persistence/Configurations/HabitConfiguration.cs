@@ -25,14 +25,21 @@ namespace MyAssistant.Persistence.Configurations
 
             builder.HasMany(x => x.Shares)
                 .WithOne()
-                .HasForeignKey(s => new { s.EntityId, s.EntityType })
-                .HasPrincipalKey(h => new { EntityId = h.Id, EntityType = nameof(Habit) })
+                .HasForeignKey(s => s.EntityId)
+                .HasPrincipalKey(h => h.Id)
                 .OnDelete(DeleteBehavior.Cascade);
 
             builder.HasMany(x => x.AuditLogs)
                 .WithOne()
                 .HasForeignKey(a => a.EntityId)
                 .HasPrincipalKey(h => h.Id)
+                .OnDelete(DeleteBehavior.Cascade);
+
+
+            builder.HasMany(x => x.Bills)
+                .WithOne()
+                .HasForeignKey(a => a.ParentEntityId)
+                .HasPrincipalKey(g => g.Id)
                 .OnDelete(DeleteBehavior.Cascade);
         }
     }

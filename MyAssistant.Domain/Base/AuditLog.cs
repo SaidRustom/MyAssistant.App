@@ -21,6 +21,8 @@ namespace MyAssistant.Domain.Base
 
         public virtual ICollection<HistoryEntry> HistoryEntries { get; set; } = new List<HistoryEntry>();
 
+        public AuditLog() { }
+
         /// <summary>
         /// Creating a new instance requires an EntityBase
         /// </summary>

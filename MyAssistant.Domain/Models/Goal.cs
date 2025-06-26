@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using MyAssistant.Domain.Base;
 using MyAssistant.Domain.Interfaces;
 

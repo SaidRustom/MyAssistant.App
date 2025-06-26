@@ -27,6 +27,7 @@ namespace MyAssistant.Persistence
         public DbSet<AuditActionType> AuditActionTypes { get; set; } = default!;
         public DbSet<PermissionType> PermissionTypes { get; set; } = default!;
         public DbSet<RecurrenceType> RecurrenceTypes { get; set; } = default!;
+        public DbSet<ShoppingItemActivityType> ShoppingItemActivityTypes { get; set; } = default!;
 
         /// <summary>
         /// Log created/updated date 
@@ -44,6 +45,7 @@ namespace MyAssistant.Persistence
                 {
                     case EntityState.Added:
                         auditLog.ActionTypeCode = AuditActionType.Create;
+                        // TODO: Add the UserId to the object
                         break;
                     case EntityState.Modified:
                         auditLog.ActionTypeCode = AuditActionType.Update;

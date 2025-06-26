@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using MyAssistant.Domain.Interfaces;
 using MyAssistant.Domain.Lookups;
 
@@ -7,11 +8,13 @@ namespace MyAssistant.Domain.Base
     /// <summary>
     /// Describes who has shared access to a given entity.
     /// </summary>
+    [Table("entityShare")]
     public class EntityShare : EntityBase
     {
         [Required]
         public Guid EntityId { get; protected set; }
 
+        [NotMapped]
         public virtual IEntityBase Entity { get; protected set; } = default!;
 
         [Required]
