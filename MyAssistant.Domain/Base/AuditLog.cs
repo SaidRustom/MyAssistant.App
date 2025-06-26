@@ -1,5 +1,4 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using MyAssistant.Domain.Lookups;
 
 namespace MyAssistant.Domain.Base
 {
