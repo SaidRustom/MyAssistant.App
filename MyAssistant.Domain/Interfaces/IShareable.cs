@@ -5,8 +5,8 @@ namespace MyAssistant.Domain.Interfaces
     /// <summary>
     /// Interface for shareable entities.
     /// </summary>
-    public interface IShareable
+    public interface IShareable<T> : IEntityBase where T : IEntityBase
     {
-        ICollection<EntityShare> Shares { get; set; }
+        ICollection<EntityShare>? Shares { get; set; }
     }
 }

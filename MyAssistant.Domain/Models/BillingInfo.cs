@@ -3,7 +3,7 @@ using MyAssistant.Domain.Interfaces;
 
 namespace MyAssistant.Domain.Models
 {
-    public class BillingInfo : AuditableEntity, IShareable
+    public class BillingInfo : AuditableEntity, IShareable<BillingInfo>
     {
         public Guid ParentEntityId { get; set; }
 
@@ -15,9 +15,17 @@ namespace MyAssistant.Domain.Models
  
         public DateTime? PaidAt { get; set; } 
 
-        public Guid? Payer { get; set; }
+        public Guid? PayerId { get; set; }
 
         // IShareable Implementation
-        public virtual ICollection<EntityShare> Shares { get; set; } = new List<EntityShare>();
+        public virtual ICollection<EntityShare>? Shares { get; set; } = new List<EntityShare>();
+
+        public BillingInfo() { }
+
+        public BillingInfo(IBillable<IEntityBase> parent)
+        {
+            ParentEntityId = parent.Id;
+            ParentEntityType = parent.GetType().Name;
+        }
     }
 }

@@ -15,7 +15,7 @@ namespace MyAssistant.Persistence.Configurations
             builder.Property(x => x.Description)
                 .HasMaxLength(1000);
 
-            builder.HasMany(x => x.Billings)
+            builder.HasMany(x => x.Bills)
                 .WithOne()
                 .HasForeignKey(a => a.ParentEntityId)
                 .OnDelete(DeleteBehavior.Cascade);

@@ -2,8 +2,8 @@
 
 namespace MyAssistant.Domain.Interfaces
 {
-    public interface IBillable
+    public interface IBillable<T> : IEntityBase where T : IEntityBase
     {
-        ICollection<BillingInfo>? Billings { get; set; }
+        ICollection<BillingInfo>? Bills { get; set; }
     }
 }
