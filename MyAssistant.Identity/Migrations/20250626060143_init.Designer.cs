@@ -11,7 +11,7 @@ using MyAssistant.Identity.Data;
 namespace MyAssistant.Identity.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20250626045032_init")]
+    [Migration("20250626060143_init")]
     partial class init
     {
         /// <inheritdoc />
