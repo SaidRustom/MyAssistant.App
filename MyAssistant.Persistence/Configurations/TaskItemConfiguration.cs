@@ -25,8 +25,8 @@ namespace MyAssistant.Persistence.Configurations
 
             builder.HasMany(x => x.Shares)
                 .WithOne()
-                .HasForeignKey(s => new { s.EntityId, s.EntityType })
-                .HasPrincipalKey(t => new { EntityId = t.Id, EntityType = nameof(TaskItem) })
+                .HasForeignKey(s => s.EntityId)
+                .HasPrincipalKey(t => t.Id)
                 .OnDelete(DeleteBehavior.Cascade);
 
             builder.HasMany(x => x.AuditLogs)

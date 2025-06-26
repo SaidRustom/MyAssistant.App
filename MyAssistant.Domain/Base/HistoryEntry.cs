@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 
 namespace MyAssistant.Domain.Base
@@ -6,6 +7,7 @@ namespace MyAssistant.Domain.Base
     /// <summary>
     /// Stores changes made in a specific Audit entry (property, old value, new value)
     /// </summary>
+    [Table("historyEntry")]
     public class HistoryEntry : EntityBase
     {
         [Required]
@@ -19,6 +21,8 @@ namespace MyAssistant.Domain.Base
 
         public string? OldValue { get; set; }
         public string? NewValue { get; set; }
+
+        public HistoryEntry() { }
 
         /// <summary>
         /// Requires an instance of AuditLog

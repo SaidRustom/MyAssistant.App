@@ -54,8 +54,8 @@ public static class Config
                 ClientName = "MyAssistant",
                 ClientId = "myassistantclient",
                 AllowedGrantTypes = GrantTypes.Code,
-                RedirectUris = { "https://xxxxx/signin-oidc" },  //TODO: Add the host address of the client (BLAZOR) here.
-                PostLogoutRedirectUris = {"https://xxxx/signout-callback-oidc"}, //TODO: Add the host address of the client (BLAZOR) here.
+                RedirectUris = { "https://localhost:7046/signin-oidc" },  //TODO: Add the host address of the client (BLAZOR) here.
+                PostLogoutRedirectUris = {"https://localhost:7046/signout-callback-oidc"}, //TODO: Add the host address of the client (BLAZOR) here.
                 AllowedScopes =
                 {
                     IdentityServerConstants.StandardScopes.OpenId,

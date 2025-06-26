@@ -10,6 +10,7 @@ namespace MyAssistant.Persistence.Configurations
         {
             builder.Property(x => x.ReceiverUserId)
                 .IsRequired();
+
             builder.Property(x => x.Content)
                 .IsRequired();
 
