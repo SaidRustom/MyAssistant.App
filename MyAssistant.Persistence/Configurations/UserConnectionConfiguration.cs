@@ -19,9 +19,7 @@ namespace MyAssistant.Persistence.Configurations
 
             builder.HasMany(x => x.AuditLogs)
                 .WithOne()
-                .HasForeignKey(a => a.EntityId)
-                .HasPrincipalKey(u => u.Id)
-                .OnDelete(DeleteBehavior.Cascade);
+                .OnDelete(DeleteBehavior.NoAction);
 
             builder.HasIndex(x => new { x.UserId, x.FriendUserId })
                 .IsUnique();

@@ -22,9 +22,7 @@ namespace MyAssistant.Persistence.Configurations
 
             builder.HasMany(x => x.AuditLogs)
                 .WithOne()
-                .HasForeignKey(a => a.EntityId)
-                .HasPrincipalKey(c => c.Id)
-                .OnDelete(DeleteBehavior.Cascade);
+                .OnDelete(DeleteBehavior.NoAction);
 
             builder.HasIndex(x => new { x.UserId, x.ReceiverUserId, x.SentAt });
         }

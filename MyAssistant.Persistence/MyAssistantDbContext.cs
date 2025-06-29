@@ -32,44 +32,47 @@ namespace MyAssistant.Persistence
         /// <summary>
         /// Log created/updated date 
         /// </summary>
-        public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
+        public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
         {
-            var changedEntries = ChangeTracker.Entries<EntityBase>();
+            // Materialize the entries first to avoid issues as the ChangeTracker could change during foreach
+            var entries = ChangeTracker.Entries<EntityBase>().ToList();
 
-            foreach (var entry in changedEntries)
+            foreach (var entry in entries)
             {
-                var auditLog = new AuditLog(entry.Entity);
-                //  TODO: auditLog.UserId = IMPLEMENT THIS!
-
-                switch (entry.State)
+                var auditLog = new AuditLog(entry.Entity)
                 {
-                    case EntityState.Added:
-                        auditLog.ActionTypeCode = AuditActionType.Create;
-                        // TODO: Add the UserId to the object
-                        break;
-                    case EntityState.Modified:
-                        auditLog.ActionTypeCode = AuditActionType.Update;
-                        break;
-                    case EntityState.Deleted:
-                        auditLog.ActionTypeCode = AuditActionType.Delete;
-                        break;
-                }
-
-                foreach (var prop in entry.Properties)
-                {
-                    if (prop.IsModified)
+                    // TODO: UserId = FetchCurrentUserId(),
+                    ActionTypeCode = entry.State switch
                     {
-                        var change = new HistoryEntry(auditLog)
+                        EntityState.Added => AuditActionType.Create,
+                        EntityState.Modified => AuditActionType.Update,
+                        EntityState.Deleted => AuditActionType.Delete,
+                        _ => 0
+                    }
+                };
+
+                await AuditLogs.AddAsync(auditLog);
+
+                if (entry.State == EntityState.Modified)
+                {
+                    foreach (var prop in entry.Properties)
+                    {
+                        if (prop.IsModified)
                         {
-                            PropertyName = prop.Metadata.Name,
-                            OldValue = prop.OriginalValue?.ToString(),
-                            NewValue = prop.CurrentValue?.ToString(),
-                        };
+                            var change = new HistoryEntry(auditLog)
+                            {
+                                PropertyName = prop.Metadata.Name,
+                                OldValue = prop.OriginalValue?.ToString(),
+                                NewValue = prop.CurrentValue?.ToString(),
+                            };
+
+                            await HistoryEntries.AddAsync(change);
+                        }
                     }
                 }
             }
 
-            return base.SaveChangesAsync(cancellationToken);
+            return await base.SaveChangesAsync(cancellationToken);
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)

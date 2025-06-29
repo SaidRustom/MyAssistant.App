@@ -10,15 +10,6 @@ namespace MyAssistant.Persistence.Configurations
         {
             builder.HasMany(x => x.Shares)
                 .WithOne()
-                .HasForeignKey(s => s.EntityId)
-                .HasPrincipalKey(g => g.Id)
-                .OnDelete(DeleteBehavior.Cascade);
-
-
-            builder.HasMany(x => x.AuditLogs)
-                .WithOne()
-                .HasForeignKey(a => a.EntityId)
-                .HasPrincipalKey(g => g.Id)
                 .OnDelete(DeleteBehavior.Cascade);
 
             builder.Property(x => x.ParentEntityId)

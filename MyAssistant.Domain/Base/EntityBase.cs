@@ -14,6 +14,6 @@ namespace MyAssistant.Domain.Base
         public Guid Id { get; set; } = Guid.NewGuid();
 
         [Required]
-        public Guid UserId { get; set; } = default!;
+        public Guid UserId { get; set; } 
     }
 }

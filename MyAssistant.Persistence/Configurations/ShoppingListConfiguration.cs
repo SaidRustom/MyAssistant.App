@@ -18,8 +18,7 @@ namespace MyAssistant.Persistence.Configurations
             builder.HasMany(x => x.Bills)
                 .WithOne()
                 .HasForeignKey(a => a.ParentEntityId)
-                .HasPrincipalKey(s => s.Id)
-                .OnDelete(DeleteBehavior.Cascade);
+                .OnDelete(DeleteBehavior.NoAction);
 
             builder.HasMany(x => x.Items)
                 .WithOne(i => i.ShoppingList)
@@ -28,13 +27,11 @@ namespace MyAssistant.Persistence.Configurations
 
             builder.HasMany(x => x.Shares)
                 .WithOne()
-                .HasForeignKey(s => s.EntityId)
-                .OnDelete(DeleteBehavior.Cascade);
+                .OnDelete(DeleteBehavior.NoAction);
 
             builder.HasMany(x => x.AuditLogs)
                 .WithOne()
-                .HasForeignKey(a => a.EntityId)
-                .OnDelete(DeleteBehavior.Cascade);
+                .OnDelete(DeleteBehavior.NoAction);
         }
     }
 }

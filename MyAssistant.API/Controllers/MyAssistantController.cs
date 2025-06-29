@@ -48,10 +48,10 @@ namespace MyAssistant.API.Controllers
             );
 
         [HttpPost]
-        protected virtual Task<IActionResult> CreateAsync<TCommand, TResponse>(TCommand command, string routeToAction, object routeValues)
+        protected virtual Task<IActionResult> CreateAsync<TCommand, TResponse>(TCommand command)
             where TCommand : IRequest<TResponse>
             => ExecuteAsync<TCommand, TResponse>(
-                command, result => CreatedAtAction(routeToAction, routeValues, new ApiResponse<TResponse>(result, "Created successfully."))
+                command, result => Ok(new ApiResponse<TResponse>(result, "Created successfully."))
             );
 
         [HttpPut]

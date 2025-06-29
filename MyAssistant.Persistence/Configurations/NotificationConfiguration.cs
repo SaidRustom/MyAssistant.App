@@ -22,9 +22,7 @@ namespace MyAssistant.Persistence.Configurations
 
             builder.HasMany(x => x.AuditLogs)
                 .WithOne()
-                .HasForeignKey(a => a.EntityId)
-                .HasPrincipalKey(n => n.Id)
-                .OnDelete(DeleteBehavior.Cascade);
+                .OnDelete(DeleteBehavior.NoAction);
         }
     }
 }

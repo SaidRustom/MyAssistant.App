@@ -24,7 +24,7 @@ namespace MyAssistant.Domain.Models
         public DateTime? RecurrenceEndDate { get; set; }
 
         // IShareable Implementation
-        public virtual ICollection<EntityShare> Shares { get; set; } = new List<EntityShare>();
+        public virtual ICollection<EntityShare>? Shares { get; set; } = new List<EntityShare>();
 
         // Relationships
         public Guid? GoalId { get; set; }
