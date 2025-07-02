@@ -1,10 +1,12 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using MediatR;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using MyAssistant.Core.Contracts.Persistence;
 using MyAssistant.Persistence.Repositories.Base;
 using MyAssistant.Persistence.Repositories;
 using Microsoft.EntityFrameworkCore.Design;
+using MyAssistant.Core.Features.Base.Get;
 
 namespace MyAssistant.Persistence
 {
@@ -18,7 +20,6 @@ namespace MyAssistant.Persistence
             services.AddScoped(typeof(IBaseAsyncRepository<>), typeof(BaseAsyncRepository<>));
             services.AddScoped<IGoalRepository, GoalRepository>();
             services.AddScoped<INotificationRepository, NotificationRepository>();
-
 
             return services;
         }

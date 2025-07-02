@@ -19,10 +19,7 @@ namespace MyAssistant.Persistence.Configurations
 
             builder.Property(x => x.ActionUrl)
                 .HasMaxLength(400);
-
-            builder.HasMany(x => x.AuditLogs)
-                .WithOne()
-                .OnDelete(DeleteBehavior.NoAction);
+            
         }
     }
 }

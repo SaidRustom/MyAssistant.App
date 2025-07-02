@@ -39,8 +39,16 @@ namespace MyAssistant.Persistence
 
             foreach (var entry in entries)
             {
+                // Get the correct entity type (handles proxies)
+                var entityType = entry.Metadata.ClrType;
+                // Find the corresponding EF entity type (may return null for unmapped types)
+                var efEntityType = entry.Context.Model.FindEntityType(entityType);
+                // Get the table name if found, or fallback to type name
+                var tableName = efEntityType?.GetTableName() ?? entityType.Name;
+                
                 var auditLog = new AuditLog(entry.Entity)
                 {
+                    EntityType = tableName,
                     // TODO: UserId = FetchCurrentUserId(),
                     ActionTypeCode = entry.State switch
                     {
@@ -51,7 +59,7 @@ namespace MyAssistant.Persistence
                     }
                 };
 
-                await AuditLogs.AddAsync(auditLog);
+                await AuditLogs.AddAsync(auditLog, cancellationToken);
 
                 if (entry.State == EntityState.Modified)
                 {
@@ -66,7 +74,7 @@ namespace MyAssistant.Persistence
                                 NewValue = prop.CurrentValue?.ToString(),
                             };
 
-                            await HistoryEntries.AddAsync(change);
+                            await HistoryEntries.AddAsync(change, cancellationToken);
                         }
                     }
                 }

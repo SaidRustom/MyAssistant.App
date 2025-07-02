@@ -26,12 +26,7 @@ namespace MyAssistant.Persistence.Configurations
             builder.HasMany(x => x.Shares)
                 .WithOne()
                 .OnDelete(DeleteBehavior.NoAction);
-
-            builder.HasMany(x => x.AuditLogs)
-                .WithOne()
-                .OnDelete(DeleteBehavior.NoAction);
-
-
+            
             builder.HasMany(x => x.Bills)
                 .WithOne()
                 .OnDelete(DeleteBehavior.NoAction);

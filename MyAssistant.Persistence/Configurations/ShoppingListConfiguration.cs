@@ -25,10 +25,6 @@ namespace MyAssistant.Persistence.Configurations
                 .HasForeignKey(i => i.ShoppingListId)
                 .OnDelete(DeleteBehavior.Cascade);
 
-            builder.HasMany(x => x.Shares)
-                .WithOne()
-                .OnDelete(DeleteBehavior.NoAction);
-
             builder.HasMany(x => x.AuditLogs)
                 .WithOne()
                 .OnDelete(DeleteBehavior.NoAction);

@@ -20,10 +20,6 @@ namespace MyAssistant.Persistence.Configurations
             builder.Property(x => x.MessageType)
                 .HasMaxLength(100);
 
-            builder.HasMany(x => x.AuditLogs)
-                .WithOne()
-                .OnDelete(DeleteBehavior.NoAction);
-
             builder.HasIndex(x => new { x.UserId, x.ReceiverUserId, x.SentAt });
         }
     }

@@ -1,9 +1,11 @@
 ﻿using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using MyAssistant.Domain.Base;
 
 namespace MyAssistant.Domain.Models
 {
+    [Table("ChatMessage")]
     public class ChatMessage : AuditableEntity
     {
         [Required]

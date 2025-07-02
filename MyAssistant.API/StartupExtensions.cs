@@ -1,10 +1,12 @@
-﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
+﻿using MediatR;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.IdentityModel.JsonWebTokens;
 using Microsoft.OpenApi.Models;
 using MyAssistant.API.Services;
 using MyAssistant.Core;
 using MyAssistant.Core.Contracts;
+using MyAssistant.Core.Features.Base.Get;
 using MyAssistant.Persistence;
 
 namespace MyAssistant.API
@@ -20,7 +22,7 @@ namespace MyAssistant.API
             builder.Services.AddPersistenceServices(builder.Configuration);
 
             builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
-
+            
             builder.Services.AddScoped<ILoggedInUserService, LoggedInUserService>();
 
             builder.Services.AddHttpContextAccessor();

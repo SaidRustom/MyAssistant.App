@@ -19,7 +19,7 @@ namespace MyAssistant.Persistence.Configurations
                 .IsRequired();
 
             builder.HasMany(x => x.HistoryEntries)
-                .WithOne(x => x.AuditLog)
+                .WithOne()
                 .HasForeignKey(x => x.AuditLogId)
                 .OnDelete(DeleteBehavior.Cascade);
         }

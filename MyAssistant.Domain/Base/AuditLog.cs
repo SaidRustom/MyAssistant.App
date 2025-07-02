@@ -31,7 +31,6 @@ namespace MyAssistant.Domain.Base
         public AuditLog(IEntityBase entity)
         {
             EntityId = entity.Id;
-            EntityType = entity.GetType().BaseType?.Name;
             Id = Guid.NewGuid();
         }
     }

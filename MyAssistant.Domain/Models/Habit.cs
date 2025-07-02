@@ -1,10 +1,12 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using MyAssistant.Domain.Base;
 using MyAssistant.Domain.Interfaces;
 using MyAssistant.Domain.Lookups;
 
 namespace MyAssistant.Domain.Models
 {
+    [Table("Habit")]
     public class Habit : AuditableEntity, IShareable<Habit>, IBillable<Habit>, IRecurrable
     {
         [Required, StringLength(200)]
@@ -28,13 +30,13 @@ namespace MyAssistant.Domain.Models
         public DateTime? RecurrenceEndDate { get; set; } // In this case the end date basically..
 
         // IShareable Implementation
-        public virtual ICollection<EntityShare>? Shares { get; set; } = new List<EntityShare>();
+        public ICollection<EntityShare>? Shares { get; set; } = new List<EntityShare>();
 
         // IBillable Implementation
-        public virtual ICollection<BillingInfo>? Bills { get; set; } = new List<BillingInfo>();
+        public ICollection<BillingInfo>? Bills { get; set; } = new List<BillingInfo>();
 
         //Relationships
         public Guid? GoalId { get; set; }
-        public virtual Goal? LinkedGoal { get; set; }
+        public Goal? LinkedGoal { get; set; }
     }
 }
