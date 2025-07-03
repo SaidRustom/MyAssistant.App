@@ -1,9 +1,11 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using MyAssistant.Domain.Base;
 using MyAssistant.Domain.Interfaces;
 
 namespace MyAssistant.Domain.Models
 {
+    [Table("ShoppingListItem")]
     public class ShoppingListItem : EntityBase, IRecurrable
     {
         [Required, StringLength(200)]

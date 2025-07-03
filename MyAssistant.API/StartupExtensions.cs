@@ -7,6 +7,7 @@ using MyAssistant.API.Services;
 using MyAssistant.Core;
 using MyAssistant.Core.Contracts;
 using MyAssistant.Core.Features.Base.Get;
+using MyAssistant.Core.Profiles;
 using MyAssistant.Persistence;
 
 namespace MyAssistant.API
@@ -21,8 +22,8 @@ namespace MyAssistant.API
             builder.Services.AddApplicationServices();
             builder.Services.AddPersistenceServices(builder.Configuration);
 
-            builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
-            
+            builder.Services.AddAutoMapper(typeof(MappingProfiles));
+
             builder.Services.AddScoped<ILoggedInUserService, LoggedInUserService>();
 
             builder.Services.AddHttpContextAccessor();

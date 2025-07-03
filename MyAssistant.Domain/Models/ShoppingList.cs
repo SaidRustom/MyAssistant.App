@@ -5,6 +5,7 @@ using MyAssistant.Domain.Interfaces;
 
 namespace MyAssistant.Domain.Models
 {
+    [Table("ShoppingList")]
     public class ShoppingList : AuditableEntity, IShareable<ShoppingList>, IBillable<ShoppingList>
     {
         [Required, StringLength(200)]

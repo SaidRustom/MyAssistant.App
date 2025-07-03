@@ -1,35 +1,32 @@
+﻿using FluentValidation;
 using System.Reflection;
 using MediatR;
 using MyAssistant.Core.Contracts.Persistence;
 using MyAssistant.Domain.Interfaces;
-using FluentValidation;
 
-namespace MyAssistant.Core.Features.Base.Create
+namespace MyAssistant.Core.Features.Base.Update
 {
-
-    public interface ICreateEntityCommandHandler<TEntity>
-        : IRequestHandler<CreateEntityCommand<TEntity>, Guid>
-        where TEntity : class, IEntityBase
+    public interface IUpdateEntityCommandHandler<TEntity>
+    : IRequestHandler<UpdateEntityCommand<TEntity>, Guid>
+    where TEntity : class, IEntityBase
     { }
 
-    public class CreateEntityCommandHandler<TEntity>(
-        IBaseAsyncRepository<TEntity> repository,
-        IServiceProvider serviceProvider)
-        : ICreateEntityCommandHandler<TEntity>
-        where TEntity : class, IEntityBase, new()
+    public class UpdateEntityCommandHandler<TEntity>(
+    IBaseAsyncRepository<TEntity> repository,
+    IServiceProvider serviceProvider)
+    : IUpdateEntityCommandHandler<TEntity>
+    where TEntity : class, IEntityBase, new()
     {
         private readonly IServiceProvider _serviceProvider = serviceProvider;
 
-        public async Task<Guid> Handle(CreateEntityCommand<TEntity> request, CancellationToken cancellationToken)
+        public async Task<Guid> Handle(UpdateEntityCommand<TEntity> request, CancellationToken cancellationToken)
         {
             if (request is null) throw new ArgumentNullException(nameof(request));
             if (request.Entity is null) throw new ArgumentNullException(nameof(request.Entity));
 
             await ValidateEntityAsync(request.Entity, cancellationToken);
 
-            //request.Entity.Id = Guid.NewGuid(); Handled by SaveChangesAsync in DbContext 
-
-            await repository.AddAsync(request.Entity);
+            await repository.UpdateAsync(request.Entity);
 
             return request.Entity.Id;
         }

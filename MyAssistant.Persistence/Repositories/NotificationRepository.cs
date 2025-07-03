@@ -18,7 +18,8 @@ namespace MyAssistant.Persistence.Repositories
 
             entity.ObjectId = obj.Id;
             entity.ObjectType = tableName;
-                
+            entity.ActionUrl = $"{entity.ObjectType}/{entity.ObjectId}";
+
             return base.AddAsync(entity);   
         }
         
