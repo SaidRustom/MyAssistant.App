@@ -8,14 +8,11 @@ namespace MyAssistant.Domain.Base
     /// <summary>
     /// Describes who has shared access to a given entity.
     /// </summary>
-    [Table("entityShare")]
+    [Table("EntityShare")]
     public class EntityShare : EntityBase
     {
         [Required]
         public Guid EntityId { get; protected set; }
-
-        [NotMapped]
-        public virtual IEntityBase Entity { get; protected set; } = default!;
 
         [Required]
         [StringLength(100)]
@@ -38,7 +35,6 @@ namespace MyAssistant.Domain.Base
 
         public EntityShare (IEntityBase entity, Guid sharedWithUser, PermissionType permissionType)
         {
-            Entity = entity;
             EntityId = entity.Id;
             SharedWithUserId = sharedWithUser;
             EntityType = entity.GetType().Name;

@@ -9,7 +9,7 @@ using MyAssistant.Identity.Data;
 
 namespace MyAssistant.Identity.Migrations
 {
-    [DbContext(typeof(ApplicationDbContext))]
+    [DbContext(typeof(MyAssistantIdentityDbContext))]
     partial class ApplicationDbContextModelSnapshot : ModelSnapshot
     {
         protected override void BuildModel(ModelBuilder modelBuilder)

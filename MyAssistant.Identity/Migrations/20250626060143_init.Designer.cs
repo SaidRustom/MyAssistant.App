@@ -10,7 +10,7 @@ using MyAssistant.Identity.Data;
 
 namespace MyAssistant.Identity.Migrations
 {
-    [DbContext(typeof(ApplicationDbContext))]
+    [DbContext(typeof(MyAssistantIdentityDbContext))]
     [Migration("20250626060143_init")]
     partial class init
     {

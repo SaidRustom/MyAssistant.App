@@ -49,7 +49,7 @@ namespace MyAssistant.API
                     options.Authority = "https://localhost:5001";
                     options.ClientId = "myassistantapi";
                     options.ClientSecret = "apisecret";
-                    options.NameClaimType = "given_name";
+                    options.NameClaimType = "name";
                     options.RoleClaimType = "role";
                 });
 

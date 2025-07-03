@@ -1,4 +1,5 @@
-﻿using MyAssistant.Identity;
+﻿
+using MyAssistant.Identity;
 using Serilog;
 
 Log.Logger = new LoggerConfiguration()

@@ -4,9 +4,9 @@ using MyAssistant.Identity.Models;
 
 namespace MyAssistant.Identity.Data;
 
-public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
+public class MyAssistantIdentityDbContext : IdentityDbContext<ApplicationUser>
 {
-    public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
+    public MyAssistantIdentityDbContext(DbContextOptions<MyAssistantIdentityDbContext> options)
         : base(options)
     {
     }

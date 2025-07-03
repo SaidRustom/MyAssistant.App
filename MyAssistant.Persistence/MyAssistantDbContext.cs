@@ -63,15 +63,22 @@ namespace MyAssistant.Persistence
 
                 if (entry.State == EntityState.Modified)
                 {
+                    // Load current database values for comparison
+                    var dbValues = await entry.GetDatabaseValuesAsync(cancellationToken);
+
                     foreach (var prop in entry.Properties)
                     {
-                        if (prop.IsModified)
+                        var dbValue = dbValues?[prop.Metadata.Name];
+                        var currentValue = prop.CurrentValue;
+
+                        // Compare DB value and current value
+                        if (!object.Equals(dbValue, currentValue))
                         {
                             var change = new HistoryEntry(auditLog)
                             {
                                 PropertyName = prop.Metadata.Name,
-                                OldValue = prop.OriginalValue?.ToString(),
-                                NewValue = prop.CurrentValue?.ToString(),
+                                OldValue = dbValue?.ToString(),
+                                NewValue = currentValue?.ToString(),
                             };
 
                             await HistoryEntries.AddAsync(change, cancellationToken);

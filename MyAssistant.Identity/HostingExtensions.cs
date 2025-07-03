@@ -13,11 +13,11 @@ internal static class HostingExtensions
     {
         builder.Services.AddRazorPages();
 
-        builder.Services.AddDbContextFactory<ApplicationDbContext>(options =>
+        builder.Services.AddDbContextFactory<MyAssistantIdentityDbContext>(options =>
             options.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection")));
 
         builder.Services.AddIdentity<ApplicationUser, IdentityRole>()
-            .AddEntityFrameworkStores<ApplicationDbContext>()
+            .AddEntityFrameworkStores<MyAssistantIdentityDbContext>()
             .AddDefaultTokenProviders();
 
         builder.Services
