@@ -12,10 +12,19 @@ public static class Config
             new IdentityResources.Profile(),
         };
 
+    public static IEnumerable<ApiResource> ApiResources =>
+        new ApiResource[]
+        {
+            new ApiResource("MyAssistantAPI", "My Assistant API")
+            {
+                Scopes = { "MyAssistantAPI.full-access" },
+            }
+        };
+    
     public static IEnumerable<ApiScope> ApiScopes =>
         new ApiScope[]
         {
-            new ApiScope("scope1"),
+            new ApiScope("MyAssistantAPI.full-access"),
             new ApiScope("scope2"),
         };
 
@@ -54,17 +63,21 @@ public static class Config
                 ClientName = "MyAssistant",
                 ClientId = "myassistantclient",
                 AllowedGrantTypes = GrantTypes.Code,
+                AccessTokenType = AccessTokenType.Reference,
+                AllowOfflineAccess = true,
+                UpdateAccessTokenClaimsOnRefresh = true,
                 RedirectUris = { "https://localhost:7046/signin-oidc" },  //TODO: Add the host address of the client (BLAZOR) here.
                 PostLogoutRedirectUris = {"https://localhost:7046/signout-callback-oidc"}, //TODO: Add the host address of the client (BLAZOR) here.
                 AllowedScopes =
                 {
                     IdentityServerConstants.StandardScopes.OpenId,
                     IdentityServerConstants.StandardScopes.Profile,
+                    "MyAssistantAPI.full-access",
                 },
                 ClientSecrets =
                 {
                     new Secret("secret".Sha256()),
                 }
-            }
+            } 
         };
 }
