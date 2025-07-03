@@ -35,6 +35,8 @@ namespace MyAssistant.Persistence.Repositories.Base
 
         public virtual async Task<T> AddAsync(T entity)
         {
+            entity.Id = Guid.NewGuid();
+
             await _context.Set<T>().AddAsync(entity);
             await _context.SaveChangesAsync();
 

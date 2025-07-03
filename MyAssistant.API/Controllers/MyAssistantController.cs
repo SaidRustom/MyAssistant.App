@@ -2,17 +2,29 @@
 using Microsoft.AspNetCore.Mvc;
 using MyAssistant.Core.Responses;
 using MyAssistant.Core.Exceptions;
+using MyAssistant.Core.Profiles;
+using AutoMapper;
+using MyAssistant.Shared;
+using MyAssistant.Domain.Interfaces;
+using MyAssistant.Core.Features.Base.Create;
+using MyAssistant.Core.Features.Base.Update;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
+using MyAssistant.Core.Features.Base.Get;
 
 namespace MyAssistant.API.Controllers
 {
     [ApiController]
-    [Route("api/[controller]")]
+    [Route("[controller]")]
     public abstract class MyAssistantBaseController : ControllerBase
     {
         protected readonly IMediator Mediator;
+        protected readonly IMapper Mapper;
 
-        protected MyAssistantBaseController(IMediator mediator)
-            => Mediator = mediator;
+        protected MyAssistantBaseController(IMediator mediator, IMapper mapper)
+        {
+            Mediator = mediator;
+            Mapper = mapper;
+        }
 
         // Unified execution
         protected async Task<IActionResult> ExecuteAsync<TRequest, TResponse>(
@@ -41,25 +53,38 @@ namespace MyAssistant.API.Controllers
         }
 
         [HttpGet("{id}")]
-        protected virtual Task<IActionResult> GetAsync<TQuery, TResponse>(TQuery query)
-            where TQuery : IRequest<TResponse>
-            => ExecuteAsync<TQuery, TResponse>(
-                query, result => Ok(new ApiResponse<TResponse>(result))
-            );
+        protected virtual async Task<IActionResult> GetAsync<TEntity, TResponse>(Guid id)
+            where TEntity : class, IEntityBase
+            where TResponse : IDto<TEntity>
+        {
+            var query = new GetEntityByIdQuery<TEntity, TResponse>(id);
+
+            return await ExecuteAsync<IRequest<TResponse>, TResponse>(
+                query, result => Ok(new ApiResponse<TResponse>(result)));
+        }
 
         [HttpPost]
-        protected virtual Task<IActionResult> CreateAsync<TCommand, TResponse>(TCommand command)
-            where TCommand : IRequest<TResponse>
-            => ExecuteAsync<TCommand, TResponse>(
-                command, result => Ok(new ApiResponse<TResponse>(result, "Created successfully."))
-            );
+        protected virtual async Task<IActionResult> CreateAsync<TEntity, TResponse>(IMapWith<TEntity> command)
+            where TEntity : class, IEntityBase
+        {
+            var obj = Mapper.Map<TEntity>(command);
+            var cmd = new CreateEntityCommand<TEntity>(obj) as IRequest<TResponse>;
+
+            return await ExecuteAsync<IRequest<TResponse>, TResponse>(
+                cmd, result => Created(string.Empty, new ApiResponse<TResponse>(result, "Created successfully.")));
+        }
+
 
         [HttpPut]
-        protected virtual Task<IActionResult> UpdateAsync<TCommand, TResponse>(TCommand command)
-            where TCommand : IRequest<TResponse>
-            => ExecuteAsync<TCommand, TResponse>(
-                command, result => Ok(new ApiResponse<TResponse>(result, "Updated successfully."))
-            );
+        protected virtual async Task<IActionResult> UpdateAsync<TEntity, TResponse>(IMapWith<TEntity> command)
+            where TEntity : class, IEntityBase
+        {
+            var obj = Mapper.Map<TEntity>(command);
+            var cmd = new UpdateEntityCommand<TEntity>(obj) as IRequest<TResponse>;
+
+            return await ExecuteAsync<IRequest<TResponse>, TResponse>(cmd, result => Ok(new ApiResponse<TResponse>(result, "Updated successfully.")));
+        }
+
 
         [HttpDelete("{id}")]
         protected virtual async Task<IActionResult> DeleteAsync<TCommand>(TCommand command)
