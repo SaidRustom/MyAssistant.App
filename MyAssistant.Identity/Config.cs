@@ -10,12 +10,14 @@ public static class Config
         {
             new IdentityResources.OpenId(),
             new IdentityResources.Profile(),
+            new IdentityResource("roles",
+                new[] {"role"})
         };
 
     public static IEnumerable<ApiResource> ApiResources =>
         new ApiResource[]
         {
-            new ApiResource("MyAssistantAPI", "My Assistant API")
+            new ApiResource("MyAssistantAPI", "My Assistant API", new[] {"role"})
             {
                 Scopes = { "MyAssistantAPI.full-access" },
             }
@@ -67,12 +69,14 @@ public static class Config
                 AllowOfflineAccess = true,
                 UpdateAccessTokenClaimsOnRefresh = true,
                 RedirectUris = { "https://localhost:7046/signin-oidc" },  //TODO: Add the host address of the client (BLAZOR) here.
+                       //{ "https://oauth.pstmn.io/v1/callback" }
                 PostLogoutRedirectUris = {"https://localhost:7046/signout-callback-oidc"}, //TODO: Add the host address of the client (BLAZOR) here.
                 AllowedScopes =
                 {
                     IdentityServerConstants.StandardScopes.OpenId,
                     IdentityServerConstants.StandardScopes.Profile,
                     "MyAssistantAPI.full-access",
+                    "roles",
                 },
                 ClientSecrets =
                 {

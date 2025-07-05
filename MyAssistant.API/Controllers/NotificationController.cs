@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Duende.IdentityServer.Extensions;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using MyAssistant.Core.Features.Base.Create;

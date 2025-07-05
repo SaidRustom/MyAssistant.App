@@ -15,7 +15,7 @@ namespace MyAssistant.API.Services
         {
             get
             {
-                return Guid.Parse(_contextAccessor.HttpContext?.User?.FindFirstValue("uid"));
+                return Guid.Parse(_contextAccessor.HttpContext?.User?.FindFirstValue("sub"));
             }
         }
     }

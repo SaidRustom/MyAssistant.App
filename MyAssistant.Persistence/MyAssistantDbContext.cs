@@ -2,13 +2,21 @@
 using MyAssistant.Domain.Models;
 using MyAssistant.Domain.Base;
 using MyAssistant.Domain.Lookups;
+using MyAssistant.Core.Contracts;
 
 namespace MyAssistant.Persistence
 {
     public class MyAssistantDbContext : DbContext
     {
+        private readonly ILoggedInUserService _loggedInUserService;
+
+        public MyAssistantDbContext(DbContextOptions<MyAssistantDbContext> options) : base(options) { }
+
         public MyAssistantDbContext(
-            DbContextOptions<MyAssistantDbContext> options) : base(options) { }
+            DbContextOptions<MyAssistantDbContext> options, ILoggedInUserService loggedInUserService) : base(options) 
+        {
+            _loggedInUserService = loggedInUserService;
+        }
 
         //Entities
         public DbSet<TaskItem> TaskItems { get; set; } = default!;
@@ -45,27 +53,26 @@ namespace MyAssistant.Persistence
                 var efEntityType = entry.Context.Model.FindEntityType(entityType);
                 // Get the table name if found, or fallback to type name
                 var tableName = efEntityType?.GetTableName() ?? entityType.Name;
-                
-                var auditLog = new AuditLog(entry.Entity)
-                {
-                    EntityType = tableName,
-                    // TODO: UserId = FetchCurrentUserId(),
-                    ActionTypeCode = entry.State switch
-                    {
-                        EntityState.Added => AuditActionType.Create,
-                        EntityState.Modified => AuditActionType.Update,
-                        EntityState.Deleted => AuditActionType.Delete,
-                        _ => 0
-                    }
-                };
 
-                await AuditLogs.AddAsync(auditLog, cancellationToken);
+                if (entry.State == EntityState.Added) //add the user id
+                {
+                    entry.Entity.Id = Guid.NewGuid();
+                    entry.Entity.UserId = _loggedInUserService.UserId;
+
+                    var auditLog = new AuditLog(tableName, entry.Entity, _loggedInUserService.UserId, AuditActionType.Create);
+
+                    await AuditLogs.AddAsync(auditLog, cancellationToken);
+                }
 
                 if (entry.State == EntityState.Modified)
                 {
+                    var auditLog = new AuditLog(tableName, entry.Entity, _loggedInUserService.UserId, AuditActionType.Update);
+
                     // Load current database values for comparison
                     var dbValues = await entry.GetDatabaseValuesAsync(cancellationToken);
+                    var changes = new List<HistoryEntry>();
 
+                    //Check if the object was changed..
                     foreach (var prop in entry.Properties)
                     {
                         var dbValue = dbValues?[prop.Metadata.Name];
@@ -80,9 +87,14 @@ namespace MyAssistant.Persistence
                                 OldValue = dbValue?.ToString(),
                                 NewValue = currentValue?.ToString(),
                             };
-
-                            await HistoryEntries.AddAsync(change, cancellationToken);
+                            changes.Add(change);
                         }
+                    }
+             
+                    if (changes.Count > 0) //Add Audit & Change entities to db
+                    {
+                        await AuditLogs.AddAsync(auditLog, cancellationToken);
+                        await HistoryEntries.AddRangeAsync(changes);
                     }
                 }
             }

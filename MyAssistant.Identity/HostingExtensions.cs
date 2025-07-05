@@ -4,6 +4,7 @@ using MyAssistant.Identity.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Serilog;
+using MyAssistant.Identity.Services;
 
 namespace MyAssistant.Identity;
 
@@ -13,12 +14,20 @@ internal static class HostingExtensions
     {
         builder.Services.AddRazorPages();
 
+        builder.Services.AddScoped<ILocalUserService, LocalUserService>();
+        builder.Services.AddScoped<IEmailSender, EmailSender>();
+
         builder.Services.AddDbContextFactory<MyAssistantIdentityDbContext>(options =>
             options.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection")));
 
         builder.Services.AddIdentity<ApplicationUser, IdentityRole>()
             .AddEntityFrameworkStores<MyAssistantIdentityDbContext>()
             .AddDefaultTokenProviders();
+
+        builder.Services.Configure<IdentityOptions>(options =>
+        {
+            options.SignIn.RequireConfirmedEmail = true;
+        });
 
         builder.Services
             .AddIdentityServer(options =>
@@ -31,6 +40,7 @@ internal static class HostingExtensions
                 // see https://docs.duendesoftware.com/identityserver/v6/fundamentals/resources/
                 options.EmitStaticAudienceClaim = true;
             })
+            .AddProfileService<LocalUserProfileService>()
             .AddInMemoryIdentityResources(Config.IdentityResources)
             .AddInMemoryApiResources(Config.ApiResources)
             .AddInMemoryApiScopes(Config.ApiScopes)
@@ -62,7 +72,7 @@ internal static class HostingExtensions
     }
     
     public static WebApplication ConfigurePipeline(this WebApplication app)
-    { 
+    {
         app.UseSerilogRequestLogging();
     
         if (app.Environment.IsDevelopment())

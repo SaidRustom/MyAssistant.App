@@ -1,4 +1,5 @@
-﻿using MediatR;
+﻿using System.Text.Json;
+using MediatR;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.IdentityModel.JsonWebTokens;
@@ -44,14 +45,18 @@ namespace MyAssistant.API
             JsonWebTokenHandler.DefaultInboundClaimTypeMap.Clear();
 
             builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+                /*
                 .AddOAuth2Introspection(options =>
                 {
                     options.Authority = "https://localhost:5001";
-                    options.ClientId = "myassistantapi";
-                    options.ClientSecret = "apisecret";
-                    options.NameClaimType = "name";
+                    options.ClientId = "myassistantclient";
+                    options.ClientSecret = "sercret";
+                    options.NameClaimType = "given_name";
                     options.RoleClaimType = "role";
-                });
+                });*/
+                // TODO: uncomment section above, JwtBearer added for development...
+
+                .AddJwtBearer(); //Config in appsettings (dev)
 
             return builder.Build();
 

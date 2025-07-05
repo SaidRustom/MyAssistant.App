@@ -28,6 +28,7 @@ namespace MyAssistant.Domain.Base
         public HistoryEntry(AuditLog auditLog)
         {
             AuditLogId = auditLog.Id;
+            UserId = auditLog.UserId;
         }
     }
 }
