@@ -11,9 +11,9 @@ namespace MyAssistant.Domain.Base
     public abstract class EntityBase : IEntityBase
     {
         [Key]
-        public Guid Id { get; set; } = Guid.NewGuid();
+        public Guid Id { get; set; }
 
         [Required]
-        public Guid UserId { get; set; } = default!;
+        public Guid UserId { get; set; } 
     }
 }

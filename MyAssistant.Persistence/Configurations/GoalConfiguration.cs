@@ -18,30 +18,20 @@ namespace MyAssistant.Persistence.Configurations
             builder.HasMany(x => x.LinkedTasks)
                 .WithOne(t => t.LinkedGoal)
                 .HasForeignKey(t => t.GoalId)
-                .OnDelete(DeleteBehavior.SetNull);
+                .OnDelete(DeleteBehavior.NoAction);
 
             builder.HasMany(x => x.LinkedHabits)
                 .WithOne(h => h.LinkedGoal)
                 .HasForeignKey(h => h.GoalId)
-                .OnDelete(DeleteBehavior.SetNull);
+                .OnDelete(DeleteBehavior.NoAction);
 
             builder.HasMany(x => x.Shares)
                 .WithOne()
-                .HasForeignKey(s => s.EntityId)
-                .HasPrincipalKey(g => g.Id)
-                .OnDelete(DeleteBehavior.Cascade);
-
-            builder.HasMany(x => x.AuditLogs)
-                .WithOne()
-                .HasForeignKey(a => a.EntityId)
-                .HasPrincipalKey(g => g.Id)
-                .OnDelete(DeleteBehavior.Cascade);
+                .OnDelete(DeleteBehavior.NoAction);
 
             builder.HasMany(x => x.Bills)
                 .WithOne()
-                .HasForeignKey(a => a.ParentEntityId)
-                .HasPrincipalKey(g => g.Id)
-                .OnDelete(DeleteBehavior.Cascade);
+                .OnDelete(DeleteBehavior.NoAction);
         }
     }
 }

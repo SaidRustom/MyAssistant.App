@@ -17,12 +17,6 @@ namespace MyAssistant.Persistence.Configurations
             builder.Property(x => x.StatusMessage)
                 .HasMaxLength(250);
 
-            builder.HasMany(x => x.AuditLogs)
-                .WithOne()
-                .HasForeignKey(a => a.EntityId)
-                .HasPrincipalKey(u => u.Id)
-                .OnDelete(DeleteBehavior.Cascade);
-
             builder.HasIndex(x => new { x.UserId, x.FriendUserId })
                 .IsUnique();
         }

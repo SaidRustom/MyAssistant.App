@@ -1,10 +1,12 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using MediatR;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using MyAssistant.Core.Contracts.Persistence;
 using MyAssistant.Persistence.Repositories.Base;
 using MyAssistant.Persistence.Repositories;
 using Microsoft.EntityFrameworkCore.Design;
+using MyAssistant.Core.Features.Base.Get;
 
 namespace MyAssistant.Persistence
 {
@@ -12,11 +14,12 @@ namespace MyAssistant.Persistence
     {
         public static IServiceCollection AddPersistenceServices(this IServiceCollection services, IConfiguration configuration)
         {
-            services.AddDbContextFactory<MyAssistantDbContext>(options =>
-                options.UseSqlite(configuration.GetConnectionString("Data Source=data.db")));
+            services.AddDbContext<MyAssistantDbContext>(options =>
+                options.UseSqlServer(configuration.GetConnectionString("MyAssistantDbConnectionString")));
 
             services.AddScoped(typeof(IBaseAsyncRepository<>), typeof(BaseAsyncRepository<>));
             services.AddScoped<IGoalRepository, GoalRepository>();
+            services.AddScoped<INotificationRepository, NotificationRepository>();
 
             return services;
         }
@@ -27,7 +30,7 @@ namespace MyAssistant.Persistence
             {
                 var optionsBuilder = new DbContextOptionsBuilder<MyAssistantDbContext>();
 
-                optionsBuilder.UseSqlite("Data Source=data.db");
+                optionsBuilder.UseSqlServer("Server=tcp:sqlserver510.database.windows.net,1433;Initial Catalog=MyAssistant;Persist Security Info=False;User ID=said_rustom;Password=Man_man123;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30");
 
                 return new MyAssistantDbContext(optionsBuilder.Options);
             }

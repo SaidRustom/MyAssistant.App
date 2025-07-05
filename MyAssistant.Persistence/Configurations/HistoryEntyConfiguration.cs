@@ -17,6 +17,9 @@ namespace MyAssistant.Persistence.Configurations
 
             builder.Property(x => x.NewValue)
                 .HasMaxLength(4000);
+
+            builder.Property(x => x.AuditLogId)
+                .IsRequired();
         }
     }
 }

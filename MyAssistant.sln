@@ -14,7 +14,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MyAssistant.Identity", "MyA
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MyAssistant.Core", "MyAssistant.Core\MyAssistant.Core.csproj", "{C111C888-340C-418B-9992-D6FECBE6F979}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MyAssistant.API", "MyAssistant.API\MyAssistant.API.csproj", "{ECCD616B-FB25-4247-BC21-3F9A94213A04}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MyAssistant.API", "MyAssistant.API\MyAssistant.API.csproj", "{ECCD616B-FB25-4247-BC21-3F9A94213A04}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MyAssistant.Shared", "MyAssistant.Shared\MyAssistant.Shared.csproj", "{3D2A70E4-DD41-41AA-AB1B-276D5CE1FD75}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -42,6 +44,10 @@ Global
 		{ECCD616B-FB25-4247-BC21-3F9A94213A04}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{ECCD616B-FB25-4247-BC21-3F9A94213A04}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{ECCD616B-FB25-4247-BC21-3F9A94213A04}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3D2A70E4-DD41-41AA-AB1B-276D5CE1FD75}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3D2A70E4-DD41-41AA-AB1B-276D5CE1FD75}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3D2A70E4-DD41-41AA-AB1B-276D5CE1FD75}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3D2A70E4-DD41-41AA-AB1B-276D5CE1FD75}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

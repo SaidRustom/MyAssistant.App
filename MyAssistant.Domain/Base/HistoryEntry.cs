@@ -7,14 +7,11 @@ namespace MyAssistant.Domain.Base
     /// <summary>
     /// Stores changes made in a specific Audit entry (property, old value, new value)
     /// </summary>
-    [Table("historyEntry")]
     public class HistoryEntry : EntityBase
     {
         [Required]
-        public Guid AuditLogId { get; set; }
-
-        public virtual AuditLog AuditLog { get; set; } = default!;
-
+        public Guid AuditLogId { get; init; }
+        
         [Required]
         [StringLength(255)]
         public string PropertyName { get; set; } = default!;
@@ -31,7 +28,7 @@ namespace MyAssistant.Domain.Base
         public HistoryEntry(AuditLog auditLog)
         {
             AuditLogId = auditLog.Id;
-            AuditLog = auditLog;
+            UserId = auditLog.UserId;
         }
     }
 }

@@ -1,4 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using MyAssistant.Domain.Interfaces;
+using MyAssistant.Domain.Lookups;
 
 namespace MyAssistant.Domain.Base
 {
@@ -27,11 +29,13 @@ namespace MyAssistant.Domain.Base
         /// Creating a new instance requires an EntityBase
         /// </summary>
         /// <param name="entity"></param>
-        public AuditLog(EntityBase entity)
+        public AuditLog(string entityType, IEntityBase entity, Guid userId, int actionTypeCode)
         {
-            EntityId = entity.Id;
-            EntityType = entity.GetType().Name;
             Id = Guid.NewGuid();
+            EntityType = entityType;
+            EntityId = entity.Id;
+            UserId = userId;
+            ActionTypeCode = actionTypeCode;
         }
     }
 }

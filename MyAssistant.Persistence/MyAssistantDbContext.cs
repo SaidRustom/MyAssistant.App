@@ -2,13 +2,21 @@
 using MyAssistant.Domain.Models;
 using MyAssistant.Domain.Base;
 using MyAssistant.Domain.Lookups;
+using MyAssistant.Core.Contracts;
 
 namespace MyAssistant.Persistence
 {
     public class MyAssistantDbContext : DbContext
     {
+        private readonly ILoggedInUserService _loggedInUserService;
+
+        public MyAssistantDbContext(DbContextOptions<MyAssistantDbContext> options) : base(options) { }
+
         public MyAssistantDbContext(
-            DbContextOptions<MyAssistantDbContext> options) : base(options) { }
+            DbContextOptions<MyAssistantDbContext> options, ILoggedInUserService loggedInUserService) : base(options) 
+        {
+            _loggedInUserService = loggedInUserService;
+        }
 
         //Entities
         public DbSet<TaskItem> TaskItems { get; set; } = default!;
@@ -32,44 +40,66 @@ namespace MyAssistant.Persistence
         /// <summary>
         /// Log created/updated date 
         /// </summary>
-        public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
+        public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
         {
-            var changedEntries = ChangeTracker.Entries<EntityBase>();
+            // Materialize the entries first to avoid issues as the ChangeTracker could change during foreach
+            var entries = ChangeTracker.Entries<EntityBase>().ToList();
 
-            foreach (var entry in changedEntries)
+            foreach (var entry in entries)
             {
-                var auditLog = new AuditLog(entry.Entity);
-                //  TODO: auditLog.UserId = IMPLEMENT THIS!
+                // Get the correct entity type (handles proxies)
+                var entityType = entry.Metadata.ClrType;
+                // Find the corresponding EF entity type (may return null for unmapped types)
+                var efEntityType = entry.Context.Model.FindEntityType(entityType);
+                // Get the table name if found, or fallback to type name
+                var tableName = efEntityType?.GetTableName() ?? entityType.Name;
 
-                switch (entry.State)
+                if (entry.State == EntityState.Added) //add the user id
                 {
-                    case EntityState.Added:
-                        auditLog.ActionTypeCode = AuditActionType.Create;
-                        // TODO: Add the UserId to the object
-                        break;
-                    case EntityState.Modified:
-                        auditLog.ActionTypeCode = AuditActionType.Update;
-                        break;
-                    case EntityState.Deleted:
-                        auditLog.ActionTypeCode = AuditActionType.Delete;
-                        break;
+                    entry.Entity.Id = Guid.NewGuid();
+                    entry.Entity.UserId = _loggedInUserService.UserId;
+
+                    var auditLog = new AuditLog(tableName, entry.Entity, _loggedInUserService.UserId, AuditActionType.Create);
+
+                    await AuditLogs.AddAsync(auditLog, cancellationToken);
                 }
 
-                foreach (var prop in entry.Properties)
+                if (entry.State == EntityState.Modified)
                 {
-                    if (prop.IsModified)
+                    var auditLog = new AuditLog(tableName, entry.Entity, _loggedInUserService.UserId, AuditActionType.Update);
+
+                    // Load current database values for comparison
+                    var dbValues = await entry.GetDatabaseValuesAsync(cancellationToken);
+                    var changes = new List<HistoryEntry>();
+
+                    //Check if the object was changed..
+                    foreach (var prop in entry.Properties)
                     {
-                        var change = new HistoryEntry(auditLog)
+                        var dbValue = dbValues?[prop.Metadata.Name];
+                        var currentValue = prop.CurrentValue;
+
+                        // Compare DB value and current value
+                        if (!object.Equals(dbValue, currentValue))
                         {
-                            PropertyName = prop.Metadata.Name,
-                            OldValue = prop.OriginalValue?.ToString(),
-                            NewValue = prop.CurrentValue?.ToString(),
-                        };
+                            var change = new HistoryEntry(auditLog)
+                            {
+                                PropertyName = prop.Metadata.Name,
+                                OldValue = dbValue?.ToString(),
+                                NewValue = currentValue?.ToString(),
+                            };
+                            changes.Add(change);
+                        }
+                    }
+             
+                    if (changes.Count > 0) //Add Audit & Change entities to db
+                    {
+                        await AuditLogs.AddAsync(auditLog, cancellationToken);
+                        await HistoryEntries.AddRangeAsync(changes);
                     }
                 }
             }
 
-            return base.SaveChangesAsync(cancellationToken);
+            return await base.SaveChangesAsync(cancellationToken);
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)

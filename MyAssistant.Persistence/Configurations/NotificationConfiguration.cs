@@ -19,12 +19,7 @@ namespace MyAssistant.Persistence.Configurations
 
             builder.Property(x => x.ActionUrl)
                 .HasMaxLength(400);
-
-            builder.HasMany(x => x.AuditLogs)
-                .WithOne()
-                .HasForeignKey(a => a.EntityId)
-                .HasPrincipalKey(n => n.Id)
-                .OnDelete(DeleteBehavior.Cascade);
+            
         }
     }
 }

@@ -1,10 +1,14 @@
-﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
+﻿using System.Text.Json;
+using MediatR;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.IdentityModel.JsonWebTokens;
 using Microsoft.OpenApi.Models;
 using MyAssistant.API.Services;
 using MyAssistant.Core;
 using MyAssistant.Core.Contracts;
+using MyAssistant.Core.Features.Base.Get;
+using MyAssistant.Core.Profiles;
 using MyAssistant.Persistence;
 
 namespace MyAssistant.API
@@ -19,7 +23,7 @@ namespace MyAssistant.API
             builder.Services.AddApplicationServices();
             builder.Services.AddPersistenceServices(builder.Configuration);
 
-            builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+            builder.Services.AddAutoMapper(typeof(MappingProfiles));
 
             builder.Services.AddScoped<ILoggedInUserService, LoggedInUserService>();
 
@@ -41,14 +45,18 @@ namespace MyAssistant.API
             JsonWebTokenHandler.DefaultInboundClaimTypeMap.Clear();
 
             builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+                /*
                 .AddOAuth2Introspection(options =>
                 {
                     options.Authority = "https://localhost:5001";
-                    options.ClientId = "myassistantapi";
-                    options.ClientSecret = "apisecret";
+                    options.ClientId = "myassistantclient";
+                    options.ClientSecret = "sercret";
                     options.NameClaimType = "given_name";
                     options.RoleClaimType = "role";
-                });
+                });*/
+                // TODO: uncomment section above, JwtBearer added for development...
+
+                .AddJwtBearer(); //Config in appsettings (dev)
 
             return builder.Build();
 

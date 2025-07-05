@@ -5,6 +5,7 @@ using MyAssistant.Domain.Interfaces;
 
 namespace MyAssistant.Domain.Models
 {
+    [Table("Goal")]
     public class Goal : AuditableEntity, IShareable<Goal>, IBillable<Goal>
     {
         [Required, StringLength(200)]
@@ -17,11 +18,11 @@ namespace MyAssistant.Domain.Models
 
         public bool IsAchieved { get; set; }
 
-        public virtual ICollection<TaskItem> LinkedTasks { get; set; } = new List<TaskItem>();
-        public virtual ICollection<Habit> LinkedHabits { get; set; } = new List<Habit>();
+        public ICollection<TaskItem> LinkedTasks { get; set; } = new List<TaskItem>();
+        public ICollection<Habit> LinkedHabits { get; set; } = new List<Habit>();
 
-        public virtual ICollection<EntityShare>? Shares { get; set; } = new List<EntityShare>();
+        public ICollection<EntityShare>? Shares { get; set; } = new List<EntityShare>();
 
-        public virtual ICollection<BillingInfo>? Bills { get; set; } = new List<BillingInfo>();
+        public ICollection<BillingInfo>? Bills { get; set; } = new List<BillingInfo>();
     }
 }

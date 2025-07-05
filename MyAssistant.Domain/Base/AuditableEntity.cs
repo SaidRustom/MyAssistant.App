@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace MyAssistant.Domain.Base
 {
@@ -8,6 +9,7 @@ namespace MyAssistant.Domain.Base
     public abstract class AuditableEntity : EntityBase
     {
         // Reference to all audit events for this entity
-        public virtual ICollection<AuditLog> AuditLogs { get; set; } = new List<AuditLog>();
+        [NotMapped]
+        public virtual ICollection<AuditLog>? AuditLogs { get; set; } = new List<AuditLog>();
     }
 }

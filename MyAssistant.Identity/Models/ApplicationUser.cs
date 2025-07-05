@@ -9,4 +9,9 @@ namespace MyAssistant.Identity.Models;
 // Add profile data for application users by adding properties to the ApplicationUser class
 public class ApplicationUser : IdentityUser
 {
+    public string? SecurityCode { get; set; }
+
+    public DateTime SecurityCodeExpirationDate { get; set; }
+
+    public bool IsActive { get; set; }
 }

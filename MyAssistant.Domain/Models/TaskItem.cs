@@ -1,9 +1,11 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using MyAssistant.Domain.Base;
 using MyAssistant.Domain.Interfaces;
 
 namespace MyAssistant.Domain.Models
 {
+    [Table("TaskItem")]
     public class TaskItem : AuditableEntity, IShareable<TaskItem>, IRecurrable
     {
         [Required, StringLength(200)]
@@ -24,7 +26,7 @@ namespace MyAssistant.Domain.Models
         public DateTime? RecurrenceEndDate { get; set; }
 
         // IShareable Implementation
-        public virtual ICollection<EntityShare> Shares { get; set; } = new List<EntityShare>();
+        public virtual ICollection<EntityShare>? Shares { get; set; } = new List<EntityShare>();
 
         // Relationships
         public Guid? GoalId { get; set; }

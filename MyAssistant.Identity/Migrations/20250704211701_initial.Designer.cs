@@ -10,9 +10,9 @@ using MyAssistant.Identity.Data;
 
 namespace MyAssistant.Identity.Migrations
 {
-    [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20250626060143_init")]
-    partial class init
+    [DbContext(typeof(MyAssistantIdentityDbContext))]
+    [Migration("20250704211701_initial")]
+    partial class initial
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -167,6 +167,9 @@ namespace MyAssistant.Identity.Migrations
                     b.Property<bool>("EmailConfirmed")
                         .HasColumnType("INTEGER");
 
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("INTEGER");
+
                     b.Property<bool>("LockoutEnabled")
                         .HasColumnType("INTEGER");
 
@@ -190,11 +193,13 @@ namespace MyAssistant.Identity.Migrations
                     b.Property<bool>("PhoneNumberConfirmed")
                         .HasColumnType("INTEGER");
 
-                    b.Property<string>("SecurityStamp")
+                    b.Property<string>("SecurityCode")
                         .HasColumnType("TEXT");
 
-                    b.Property<string>("Subject")
-                        .IsRequired()
+                    b.Property<DateTime>("SecurityCodeExpirationDate")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("SecurityStamp")
                         .HasColumnType("TEXT");
 
                     b.Property<bool>("TwoFactorEnabled")
