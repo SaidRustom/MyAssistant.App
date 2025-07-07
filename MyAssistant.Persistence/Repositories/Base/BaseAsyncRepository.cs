@@ -16,6 +16,9 @@ namespace MyAssistant.Persistence.Repositories.Base
             
             if (obj is AuditableEntity auditable)
                 await IncludeAuditLogAsync(auditable);
+            if(obj is IShareable<T> shareable)
+                await IncludeSharesAsync(shareable);
+            //TODO: Add Billable
 
             return obj;
         }
@@ -28,6 +31,12 @@ namespace MyAssistant.Persistence.Repositories.Base
             {
                 foreach (var item in list)
                     await IncludeAuditLogAsync((item as AuditableEntity)!);
+            }
+
+            if (typeof(IShareable<T>).IsAssignableFrom(typeof(T)))
+            {
+                foreach (var item in list)
+                    await IncludeSharesAsync((item as IShareable<T>)!);
             }
 
             return list;
@@ -74,6 +83,15 @@ namespace MyAssistant.Persistence.Repositories.Base
                 .ToListAsync();
             
             return auditable;
+        }
+
+        private async Task<IShareable<T>> IncludeSharesAsync(IShareable<T> shareable)
+        {
+            shareable.Shares = await _context.EntityShares
+                .Where(x => x.EntityId == shareable.Id)
+                .ToListAsync();
+
+            return shareable;
         }
         
         #endregion

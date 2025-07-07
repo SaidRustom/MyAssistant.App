@@ -6,7 +6,7 @@ namespace MyAssistant.Domain.Base
     {
         public static LookupBaseList<T>? CachedList { get; set; }
 
-        public static LookupBase<T> Get(int code)
+        public static T Get(int code)
         {
             var value = CachedList?.Where(x => x.Code == code).FirstOrDefault();
 

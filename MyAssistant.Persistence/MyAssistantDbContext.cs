@@ -3,12 +3,13 @@ using MyAssistant.Domain.Models;
 using MyAssistant.Domain.Base;
 using MyAssistant.Domain.Lookups;
 using MyAssistant.Core.Contracts;
+using System.Runtime.CompilerServices;
 
 namespace MyAssistant.Persistence
 {
     public class MyAssistantDbContext : DbContext
     {
-        private readonly ILoggedInUserService _loggedInUserService;
+        private readonly ILoggedInUserService? _loggedInUserService;
 
         public MyAssistantDbContext(DbContextOptions<MyAssistantDbContext> options) : base(options) { }
 
@@ -42,6 +43,9 @@ namespace MyAssistant.Persistence
         /// </summary>
         public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
         {
+            if(_loggedInUserService == null)
+                throw new NullReferenceException(nameof(_loggedInUserService));
+
             // Materialize the entries first to avoid issues as the ChangeTracker could change during foreach
             var entries = ChangeTracker.Entries<EntityBase>().ToList();
 
@@ -97,8 +101,82 @@ namespace MyAssistant.Persistence
                         await HistoryEntries.AddRangeAsync(changes);
                     }
                 }
+                //TODO: Handle delete
             }
 
+            return await base.SaveChangesAsync(cancellationToken);
+        }
+
+
+        /// <summary>
+        /// The method to be called by background services to handle audit logs accordingly
+        /// </summary>
+        /// <remarks>UserId should be populated before calling this</remarks>
+        public async Task<int> SaveServiceChangesAsync(MyAssistantServiceType serviceType, CancellationToken cancellationToken = default)
+        {
+            var entries = ChangeTracker.Entries<EntityBase>().ToList();
+
+            foreach (var entry in entries)
+            {
+                // Get the correct entity type (handles proxies)
+                var entityType = entry.Metadata.ClrType;
+                // Find the corresponding EF entity type (may return null for unmapped types)
+                var efEntityType = entry.Context.Model.FindEntityType(entityType);
+                // Get the table name if found, or fallback to type name
+                var tableName = efEntityType?.GetTableName() ?? entityType.Name;
+
+                if (entry.State == EntityState.Added) //add the user id
+                {
+                    entry.Entity.Id = Guid.NewGuid();
+                    var auditLog = new AuditLog(tableName, entry.Entity, serviceType, AuditActionType.Create);
+
+                    await AuditLogs.AddAsync(auditLog, cancellationToken);
+                }
+
+                if (entry.State == EntityState.Modified)
+                {
+                    var auditLog = new AuditLog(tableName, entry.Entity, serviceType, AuditActionType.Update);
+
+                    // Load current database values for comparison
+                    var dbValues = await entry.GetDatabaseValuesAsync(cancellationToken);
+                    var changes = new List<HistoryEntry>();
+
+                    //Check if the object was changed..
+                    foreach (var prop in entry.Properties)
+                    {
+                        var dbValue = dbValues?[prop.Metadata.Name];
+                        var currentValue = prop.CurrentValue;
+
+                        // Compare DB value and current value
+                        if (!object.Equals(dbValue, currentValue))
+                        {
+                            var change = new HistoryEntry(auditLog)
+                            {
+                                PropertyName = prop.Metadata.Name,
+                                OldValue = dbValue?.ToString(),
+                                NewValue = currentValue?.ToString(),
+                            };
+                            changes.Add(change);
+                        }
+                    }
+
+                    if (changes.Count > 0) //Add Audit & Change entities to db
+                    {
+                        await AuditLogs.AddAsync(auditLog, cancellationToken);
+                        await HistoryEntries.AddRangeAsync(changes);
+                    }
+                }
+                //TODO: Handle delete
+            }
+
+            return await base.SaveChangesAsync(cancellationToken);
+        }
+
+        /// <summary>
+        /// USE WITH CAUTION!! used to Save ServiceLogs etc..
+        /// </summary>
+        public async Task<int> SurpassAuditAndSaveAsync(CancellationToken cancellationToken = default)
+        {
             return await base.SaveChangesAsync(cancellationToken);
         }
 
@@ -132,9 +210,9 @@ namespace MyAssistant.Persistence
             modelBuilder.Entity<ShoppingItemActivityType>().HasData(new ShoppingItemActivityType { Code = 3, Description = "Urgent" });
             modelBuilder.Entity<ShoppingItemActivityType>().HasData(new ShoppingItemActivityType { Code = 4, Description = "NotUrgent" });
 
+            //modelBuilder.Entity<MyAssistantServiceType>().HasData(new MyAssistantServiceType { Code = 1, Description = "" });
+
             #endregion
-
-
         }
     }
 }
