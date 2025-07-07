@@ -80,6 +80,8 @@ namespace MyAssistant.Persistence.Repositories.Base
         {
             auditable.AuditLogs = await _context.AuditLogs
                 .Where(x => x.EntityId == auditable.Id)
+                .Include(x => x.HistoryEntries)
+                .OrderByDescending(x => x.EventDate)
                 .ToListAsync();
             
             return auditable;

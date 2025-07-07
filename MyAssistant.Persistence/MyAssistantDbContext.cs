@@ -4,6 +4,7 @@ using MyAssistant.Domain.Base;
 using MyAssistant.Domain.Lookups;
 using MyAssistant.Core.Contracts;
 using System.Runtime.CompilerServices;
+using MyAssistant.Domain.Interfaces;
 
 namespace MyAssistant.Persistence
 {
@@ -74,6 +75,8 @@ namespace MyAssistant.Persistence
 
                     // Load current database values for comparison
                     var dbValues = await entry.GetDatabaseValuesAsync(cancellationToken);
+                    // And make sure UserId doesn't change..
+                    entry.Entity.UserId = Guid.Parse(dbValues["UserId"].ToString() ?? Guid.Empty.ToString());
                     var changes = new List<HistoryEntry>();
 
                     //Check if the object was changed..

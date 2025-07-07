@@ -4,8 +4,10 @@ using MyAssistant.Domain.Models;
 
 namespace MyAssistant.Shared.DTOs
 {
-    public class CreateNotificationCommand : IRequest<Guid>, IMapWith<Notification>
+    public class CreateOrUpdateNotificationCommand : IRequest<Guid>, IMapWith<Notification>
     {
+        public  Guid? Id { get; set; }
+
         [Required, StringLength(200)]
         public string Title { get; set; } = default!;
 
