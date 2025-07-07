@@ -1,9 +1,6 @@
 ﻿using AutoMapper;
-using Duende.IdentityServer.Extensions;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using MyAssistant.Core.Features.Base.Create;
-using MyAssistant.Core.Features.Base.Get;
 using MyAssistant.Core.Responses;
 using MyAssistant.Domain.Models;
 using MyAssistant.Shared.DTOs;
@@ -18,9 +15,9 @@ namespace MyAssistant.API.Controllers
         /// Retrieves a Notification by ID.
         /// </summary>
         [HttpGet("{id}")]
-        [ProducesResponseType(typeof(ApiResponse<Notification>), StatusCodes.Status200OK)]
-        [ProducesResponseType(typeof(ApiResponse<Notification>), StatusCodes.Status404NotFound)]
-        [ProducesResponseType(typeof(ApiResponse<Notification>), StatusCodes.Status500InternalServerError)]
+        [ProducesResponseType(typeof(ApiResponse<NotificationDto>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ApiResponse<NotificationDto>), StatusCodes.Status404NotFound)]
+        [ProducesResponseType(typeof(ApiResponse<NotificationDto>), StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> Get(Guid id)
             => await GetAsync<Notification, NotificationDto>(id);
 
@@ -31,7 +28,7 @@ namespace MyAssistant.API.Controllers
         [ProducesResponseType(typeof(ApiResponse<Guid>), StatusCodes.Status201Created)]
         [ProducesResponseType(typeof(ApiResponse<Guid>), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(ApiResponse<Guid>), StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult> Create(CreateNotificationCommand command)
+        public async Task<IActionResult> Create(CreateOrUpdateNotificationCommand command)
             =>  await CreateAsync<Notification, Guid>(command);
 
         /// <summary>
@@ -41,7 +38,7 @@ namespace MyAssistant.API.Controllers
         [ProducesResponseType(typeof(ApiResponse<Guid>), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ApiResponse<Guid>), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(ApiResponse<Guid>), StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult> Update(NotificationDto command)
+        public async Task<IActionResult> Update(CreateOrUpdateNotificationCommand command)
             => await UpdateAsync<Notification, Guid>(command);
     }
 }

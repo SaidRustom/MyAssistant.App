@@ -6,7 +6,6 @@ using MyAssistant.Core.Contracts.Persistence;
 using MyAssistant.Persistence.Repositories.Base;
 using MyAssistant.Persistence.Repositories;
 using Microsoft.EntityFrameworkCore.Design;
-using MyAssistant.Core.Features.Base.Get;
 
 namespace MyAssistant.Persistence
 {
