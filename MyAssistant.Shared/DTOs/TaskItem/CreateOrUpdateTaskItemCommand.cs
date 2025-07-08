@@ -6,6 +6,8 @@ namespace MyAssistant.Shared.DTOs
 {
     public class CreateOrUpdateTaskItemCommand : IRequest<Guid>, IMapWith<TaskItem>
     {
+        public Guid? Id { get; set; }
+
         [Required, StringLength(200)]
         public string Title { get; set; } = default!;
 
