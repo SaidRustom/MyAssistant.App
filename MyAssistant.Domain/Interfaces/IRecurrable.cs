@@ -1,12 +1,11 @@
 ﻿
+using MyAssistant.Domain.Models;
+
 namespace MyAssistant.Domain.Interfaces
 {
     public interface IRecurrable
     {
-        bool IsRecurring { get; set; }
-
-        int? RecurrenceTypeCode { get; set; }
-
-        public DateTime? RecurrenceEndDate { get; set; }
+        Guid? RecurrenceId { get; set; }
+        Recurrence? Recurrence { get; set; }
     }
 }

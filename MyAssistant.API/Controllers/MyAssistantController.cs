@@ -2,13 +2,11 @@
 using Microsoft.AspNetCore.Mvc;
 using MyAssistant.Core.Responses;
 using MyAssistant.Core.Exceptions;
-using MyAssistant.Core.Profiles;
 using AutoMapper;
 using MyAssistant.Shared;
 using MyAssistant.Domain.Interfaces;
 using MyAssistant.Core.Features.Base.Create;
 using MyAssistant.Core.Features.Base.Update;
-using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 using MyAssistant.Core.Features.Base.Get;
 
 namespace MyAssistant.API.Controllers

@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using MyAssistant.Persistence;
 
@@ -11,9 +12,11 @@ using MyAssistant.Persistence;
 namespace MyAssistant.Persistence.Migrations
 {
     [DbContext(typeof(MyAssistantDbContext))]
-    partial class MyAssistantDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250707214354_recurrence")]
+    partial class recurrence
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -564,9 +567,6 @@ namespace MyAssistant.Persistence.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<int>("DefaultPriority")
-                        .HasColumnType("int");
-
                     b.Property<string>("Description")
                         .HasColumnType("nvarchar(max)");
 
@@ -576,16 +576,13 @@ namespace MyAssistant.Persistence.Migrations
                     b.Property<int>("Interval")
                         .HasColumnType("int");
 
-                    b.Property<int>("LengthInMinutes")
-                        .HasColumnType("int");
-
                     b.Property<int>("RecurrenceTypeCode")
                         .HasColumnType("int");
 
                     b.Property<DateTime>("StartDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<TimeSpan?>("Time")
+                    b.Property<TimeOnly?>("Time")
                         .HasColumnType("time");
 
                     b.Property<string>("Title")
@@ -679,7 +676,7 @@ namespace MyAssistant.Persistence.Migrations
                         .HasMaxLength(1000)
                         .HasColumnType("nvarchar(1000)");
 
-                    b.Property<DateTime?>("DueDate")
+                    b.Property<DateTime>("DueDate")
                         .HasColumnType("datetime2");
 
                     b.Property<Guid?>("GoalId")
@@ -687,9 +684,6 @@ namespace MyAssistant.Persistence.Migrations
 
                     b.Property<bool>("IsCompleted")
                         .HasColumnType("bit");
-
-                    b.Property<int>("LengthInMinutes")
-                        .HasColumnType("int");
 
                     b.Property<int>("Priority")
                         .HasColumnType("int");
