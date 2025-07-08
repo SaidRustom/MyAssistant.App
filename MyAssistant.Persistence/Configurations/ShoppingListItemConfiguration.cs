@@ -12,6 +12,10 @@ namespace MyAssistant.Persistence.Configurations
                 .IsRequired()
                 .HasMaxLength(200);
 
+            builder.HasOne(x => x.Recurrence)
+                .WithMany()
+                .OnDelete(DeleteBehavior.NoAction);
+
             builder.Property(x => x.UnitPrice)
                 .HasColumnType("decimal(18,2)");
 

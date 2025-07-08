@@ -14,16 +14,20 @@ namespace MyAssistant.Domain.Models
         [StringLength(1000)]
         public string? Description { get; set; }
 
-        public DateTime? Time { get; set; }
+        public DateTime? ScheduledAt { get; set; }
 
         public DateTime? DueDate { get; set; }
 
+        public int LengthInMinutes { get; set; }
+
         public bool IsCompleted { get; set; }
 
+        [Range(0,5)]
+        public int Priority { get; set; }
+
         // IRecurrable implementation:
-        public bool IsRecurring { get; set; }
-        public int? RecurrenceTypeCode { get; set; }
-        public DateTime? RecurrenceEndDate { get; set; }
+        public Guid? RecurrenceId { get; set; }
+        public virtual Recurrence? Recurrence { get; set; }
 
         // IShareable Implementation
         public virtual ICollection<EntityShare>? Shares { get; set; } = new List<EntityShare>();

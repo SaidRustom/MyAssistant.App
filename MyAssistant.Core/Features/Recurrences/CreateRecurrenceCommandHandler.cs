@@ -1,0 +1,88 @@
+﻿using AutoMapper;
+using MediatR;
+using MyAssistant.Core.Contracts.Persistence;
+using MyAssistant.Domain.Lookups;
+using MyAssistant.Domain.Models;
+using MyAssistant.Shared.DTOs;
+
+namespace MyAssistant.Core.Features.Recurrences
+{
+    public class CreateRecurrenceCommandHandler : IRequestHandler<CreateRecurrenceCommand, Guid>
+    {
+        static int MAX_ALLOWED_OCCURRENCES = 100;        
+        private readonly IMediator _mediator;
+        private readonly IBaseAsyncRepository<Recurrence> _repo;
+        private readonly IBaseAsyncRepository<TaskItem> _taskRepo;
+        private readonly IMapper _mapper;
+
+        public CreateRecurrenceCommandHandler(IBaseAsyncRepository<Recurrence> repo, IBaseAsyncRepository<TaskItem> taskRepo ,IMediator mediator, IMapper mapper)
+        {
+            _repo = repo;
+            _taskRepo = taskRepo;
+            _mediator = mediator;
+            _mapper = mapper;
+        }
+
+        public async Task<Guid> Handle(CreateRecurrenceCommand request, CancellationToken cancellation)
+        {
+
+            var recurrence = _mapper.Map<Recurrence>(request);
+            recurrence = await _repo.AddAsync(recurrence);
+
+            foreach(var date in GetRequestOccurrences(recurrence))
+            {
+                TaskItem item = new()
+                {
+                    RecurrenceId = recurrence.Id,
+                    Title = recurrence.Title,
+                    Description = recurrence.Description,
+                    DueDate = date,
+                    LengthInMinutes = recurrence.LengthInMinutes,
+                    Priority = recurrence.DefaultPriority
+                };
+
+                if(recurrence.Time.HasValue)
+                    item.ScheduledAt = new DateTime(date.Year, date.Month, date.Day)
+                        .AddHours(recurrence.Time.Value.Hours)
+                        .AddMinutes(recurrence.Time.Value.Minutes);
+                
+
+                await _taskRepo.AddAsync(item);
+            }
+
+            //TODO: Log the # of occurences added 
+
+            return recurrence.Id;
+        }
+
+        public IEnumerable<DateTime> GetRequestOccurrences(Recurrence request)
+        {
+            List<DateTime> result = new List<DateTime>();
+            DateTime occurrence = request.StartDate;
+
+            while(occurrence <= request.EndDate && 
+                (!request.EndDate.HasValue || occurrence <= request.EndDate.Value) &&
+                result.Count < MAX_ALLOWED_OCCURRENCES)
+            {
+                //add the start date instance//
+                result.Add(occurrence);
+
+                if(request.RecurrenceTypeCode == RecurrenceType.Daily)
+                    occurrence = occurrence.AddDays(request.Interval);
+
+                if (request.RecurrenceTypeCode == RecurrenceType.Weekly)
+                    occurrence = occurrence.AddDays(request.Interval * 7);
+
+                if (request.RecurrenceTypeCode == RecurrenceType.Monthly)
+                    occurrence = occurrence.AddMonths(request.Interval);
+
+                if (request.RecurrenceTypeCode == RecurrenceType.Annually)
+                    occurrence = occurrence.AddYears(request.Interval);
+            }
+
+
+
+            return result;
+        }
+    }
+}

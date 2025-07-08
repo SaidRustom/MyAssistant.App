@@ -25,9 +25,8 @@ namespace MyAssistant.Domain.Models
         public bool IsCompleted { get; set; }
 
         // IRecurrable implementation:
-        public bool IsRecurring { get; set; }
-        public int? RecurrenceTypeCode { get; set; }
-        public DateTime? RecurrenceEndDate { get; set; } // In this case the end date basically..
+        public Guid? RecurrenceId { get; set; }
+        public virtual Recurrence? Recurrence { get; set; }
 
         // IShareable Implementation
         public ICollection<EntityShare>? Shares { get; set; } = new List<EntityShare>();
