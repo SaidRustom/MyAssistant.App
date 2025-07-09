@@ -9,9 +9,7 @@ namespace MyAssistant.Shared.DTOs
         public new Guid Id { get; set; }
 
         public Guid UserId { get; set; }
-
-        public bool IsEditable { get; set; }
-
+        
         public Recurrence? Recurrence { get; set; }
 
         public PermissionType PermissionType { get; set; } = default!;

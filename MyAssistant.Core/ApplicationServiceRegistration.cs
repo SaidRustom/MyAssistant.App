@@ -1,4 +1,6 @@
-﻿using MediatR;
+﻿using System.Reflection;
+using FluentValidation;
+using MediatR;
 using Microsoft.Extensions.DependencyInjection;
 using MyAssistant.Core.Features.Base.Create;
 using MyAssistant.Core.Features.Base.Get;
@@ -16,6 +18,9 @@ namespace MyAssistant.Core
             services.AddAutoMapper(typeof(MappingProfiles));
 
             services.AddMediatR(cfg => cfg.RegisterServicesFromAssemblies(AppDomain.CurrentDomain.GetAssemblies()));
+            
+            // FluentValidation.AspNetCore package does auto-registration nicely:
+            services.AddValidatorsFromAssembly(Assembly.GetExecutingAssembly());
 
             // Register closed generic types
             // Find all types implementing IEntityBase (not abstract, not interface)

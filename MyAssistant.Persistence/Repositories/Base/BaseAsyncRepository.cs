@@ -81,9 +81,12 @@ namespace MyAssistant.Persistence.Repositories.Base
             await _context.SaveChangesAsync();
         }
 
-        public virtual async Task<bool> ExistsAsync(T entity)
+        public virtual async Task<bool> ExistsAsync(T? entity)
         {
-            return await _context.Set<T>().AnyAsync(x => x.Id == entity.Id);
+            if(entity == null)
+                return false;
+            else
+                return await _context.Set<T>().AnyAsync(x => x.Id == entity.Id);
         }
         
         #region Helper Methods

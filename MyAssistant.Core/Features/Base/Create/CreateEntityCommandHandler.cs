@@ -67,7 +67,7 @@ namespace MyAssistant.Core.Features.Base.Create
                 {
                     var result = await validator.ValidateAsync(entity, cancellationToken);
                     if (!result.IsValid)
-                        throw new ValidationException(result.Errors);
+                        throw new Exceptions.ValidationException(result);
                 }
             }
         }

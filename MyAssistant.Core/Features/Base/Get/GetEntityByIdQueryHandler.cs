@@ -1,3 +1,4 @@
+using System.Collections.ObjectModel;
 using AutoMapper;
 using MediatR;
 using MyAssistant.Core.Contracts;
@@ -89,7 +90,23 @@ namespace MyAssistant.Core.Features.Base.Get
             else
             {
                 ICollection<EntityShare> shares = new List<EntityShare>();
-                var prop = shareableDtoInterface.GetProperty("Shares")!.GetValue(shares);
+                
+                var sharesPropertyInfo = shareableDtoInterface.GetProperty("Shares");
+
+                // Correctly get the value from DTO instance
+                var sharesValue = sharesPropertyInfo?.GetValue(dto);
+
+                // Since the returned type is a Collection<EntityShare>, explicitly cast it to that or ICollection<EntityShare>
+                if (sharesValue is ICollection<EntityShare> entitySharesCollection)
+                {
+                    // assign correctly casted value
+                    shares = entitySharesCollection;
+                }
+                else
+                {
+                    // handle if not correct type
+                    shares = new List<EntityShare>();
+                }
 
                 var share = shares.FirstOrDefault(share => share.SharedWithUserId == _userID)
                     ?? throw new UnauthorizedAccessException("Unauthorized access");

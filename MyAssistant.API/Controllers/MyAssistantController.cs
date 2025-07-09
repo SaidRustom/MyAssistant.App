@@ -61,6 +61,13 @@ namespace MyAssistant.API.Controllers
                     "Validation failed."
                 ));
             }
+            catch (UnauthorizedAccessException unauthorized)
+            {
+                return StatusCode(StatusCodes.Status401Unauthorized, new ApiResponse<TResponse>(
+                    new List<string> { unauthorized.Message },
+                    "Unauthorized."
+                ));
+            }
             catch (Exception ex)
             {
                 return StatusCode(StatusCodes.Status500InternalServerError, new ApiResponse<TResponse>(
