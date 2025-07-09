@@ -3,8 +3,6 @@ using MyAssistant.Domain.Models;
 using MyAssistant.Domain.Base;
 using MyAssistant.Domain.Lookups;
 using MyAssistant.Core.Contracts;
-using System.Runtime.CompilerServices;
-using MyAssistant.Domain.Interfaces;
 
 namespace MyAssistant.Persistence
 {

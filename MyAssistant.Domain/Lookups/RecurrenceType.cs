@@ -16,7 +16,7 @@ namespace MyAssistant.Domain.Lookups
 
     public class RecurrenceTypeList : LookupBaseList<RecurrenceType>
     {
-        public new static RecurrenceTypeList CachedList
+        public RecurrenceTypeList CachedList
         {
             get { return _recurrenceTypeList; }
             set { _recurrenceTypeList = value; }

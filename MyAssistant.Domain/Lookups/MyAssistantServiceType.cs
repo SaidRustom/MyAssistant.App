@@ -9,7 +9,7 @@ namespace MyAssistant.Domain.Lookups
 
     public class MyAssistantServiceTypeList : LookupBaseList<MyAssistantServiceType>
     {
-        public new static MyAssistantServiceTypeList CachedList
+        public MyAssistantServiceTypeList CachedList
         {
             get { return _myAssistantServiceTypeList; }
             set { _myAssistantServiceTypeList = value; }

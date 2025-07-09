@@ -1,5 +1,4 @@
-﻿using System.ComponentModel;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using MyAssistant.Domain.Base;
 
@@ -14,7 +13,7 @@ namespace MyAssistant.Domain.Models
         [Required]
         public string Content { get; set; } = default!;
 
-        public DateTime SentAt { get; set; }
+        public DateTime SentAt { get; set; } = DateTime.Now;
 
         public bool IsRead { get; set; }
 

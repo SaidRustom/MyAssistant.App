@@ -8,10 +8,10 @@ namespace MyAssistant.Domain.Base
 
         public static T Get(int code)
         {
-            var value = CachedList?.Where(x => x.Code == code).FirstOrDefault();
+            var value = CachedList.Where(x => x.Code == code).FirstOrDefault();
 
-            if(value is null)
-                return LookupBase<T>.EmptyValue();
+            if (value is null)
+                throw new NullReferenceException($"Lookup:{typeof(T).Name}, code:{code} - not found.");
 
             return value;
         }

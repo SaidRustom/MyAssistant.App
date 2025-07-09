@@ -16,7 +16,7 @@ namespace MyAssistant.Core
             services.AddAutoMapper(typeof(MappingProfiles));
 
             services.AddMediatR(cfg => cfg.RegisterServicesFromAssemblies(AppDomain.CurrentDomain.GetAssemblies()));
-            
+
             // Register closed generic types
             // Find all types implementing IEntityBase (not abstract, not interface)
             var entityAssembly = typeof(IEntityBase).Assembly; // use domain/entities assembly

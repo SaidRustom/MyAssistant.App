@@ -13,7 +13,7 @@ namespace MyAssistant.Domain.Lookups
 
     public class PermissionTypeList : LookupBaseList<PermissionType>
     {
-        public new static PermissionTypeList CachedList
+        public PermissionTypeList CachedList
         {
             get { return _permissionTypeList; }
             set { _permissionTypeList = value; }

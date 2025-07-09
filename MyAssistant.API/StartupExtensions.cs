@@ -1,13 +1,10 @@
-﻿using System.Text.Json;
-using MediatR;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
+﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.IdentityModel.JsonWebTokens;
 using Microsoft.OpenApi.Models;
 using MyAssistant.API.Services;
 using MyAssistant.Core;
 using MyAssistant.Core.Contracts;
-using MyAssistant.Core.Features.Base.Get;
 using MyAssistant.Core.Profiles;
 using MyAssistant.Persistence;
 

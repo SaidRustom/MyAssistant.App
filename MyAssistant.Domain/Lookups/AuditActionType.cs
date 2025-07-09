@@ -14,7 +14,7 @@ namespace MyAssistant.Domain.Lookups
 
     public class AuditActionTypeList : LookupBaseList<AuditActionType>
     {
-        public new static AuditActionTypeList CachedList
+        public AuditActionTypeList CachedList
         {
             get { return _auditActionTypeList; }
             set { _auditActionTypeList = value; }

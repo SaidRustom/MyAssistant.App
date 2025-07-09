@@ -11,7 +11,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\MyAssistant.Domain\MyAssistant.Domain.csproj" />
+	  <!--> TODO: Referenced the Domain project for ease, should probably remove it in prod (Use interfaces instead..)-->
+    <ProjectReference Include="..\MyAssistant.Domain\MyAssistant.Domain.csproj" /> 
   </ItemGroup>
 
 </Project>
