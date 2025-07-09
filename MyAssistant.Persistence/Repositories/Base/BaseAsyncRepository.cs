@@ -12,7 +12,7 @@ namespace MyAssistant.Persistence.Repositories.Base
 
         public virtual async Task<T> GetByIdAsync(Guid id)
         {
-            var obj = (await _context.Set<T>().FindAsync(id))!;
+            var obj = await _context.Set<T>().FindAsync(id)!;
             
             if (obj is AuditableEntity auditable)
                 await IncludeAuditLogAsync(auditable);
@@ -63,7 +63,7 @@ namespace MyAssistant.Persistence.Repositories.Base
             return entityList.Count;
         }
 
-        public async Task UpdateAsync(T entity)
+        public virtual async Task UpdateAsync(T entity)
         {
             _context.Entry(entity).State = EntityState.Modified;
             await _context.SaveChangesAsync();
@@ -88,7 +88,18 @@ namespace MyAssistant.Persistence.Repositories.Base
             else
                 return await _context.Set<T>().AnyAsync(x => x.Id == entity.Id);
         }
-        
+
+        public async Task DetachAsync(T entity)
+        {
+            var existingTrackedItem = context.ChangeTracker.Entries<T>()
+                .FirstOrDefault(e => e.Entity.Id == entity.Id);
+            
+            if (existingTrackedItem != null)
+            {
+                existingTrackedItem.State = EntityState.Detached;
+            }
+        }
+
         #region Helper Methods
         
         /// <summary>

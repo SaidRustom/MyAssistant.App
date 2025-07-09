@@ -7,30 +7,29 @@ using MyAssistant.Shared.DTOs;
 
 namespace MyAssistant.API.Controllers;
 
-public class ShoppingListItemController(IMediator mediator, IMapper mapper)
-    : MyAssistantBaseController(mediator, mapper)
+public class ShoppingListController(IMediator mediator, IMapper mapper) : 
+    MyAssistantBaseController(mediator, mapper)
 {
     [HttpGet("{id}")]
-    [ProducesResponseType(typeof(ApiResponse<ShoppingListItemDto>), StatusCodes.Status200OK)]
-    [ProducesResponseType(typeof(ApiResponse<ShoppingListItemDto>), StatusCodes.Status404NotFound)]
-    [ProducesResponseType(typeof(ApiResponse<ShoppingListItemDto>), StatusCodes.Status500InternalServerError)]
+    [ProducesResponseType(typeof(ApiResponse<ShoppingListDto>), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(ApiResponse<ShoppingListDto>), StatusCodes.Status404NotFound)]
+    [ProducesResponseType(typeof(ApiResponse<ShoppingListDto>), StatusCodes.Status500InternalServerError)]
     public async Task<IActionResult> Get(Guid id)
-        => await GetAsync<ShoppingListItem, ShoppingListItemDto>(id);
+        => await GetAsync<ShoppingList, ShoppingListDto>(id);
     
     [HttpPost]
     [ProducesResponseType(typeof(ApiResponse<Guid>), StatusCodes.Status201Created)]
     [ProducesResponseType(typeof(ApiResponse<Guid>), StatusCodes.Status400BadRequest)]
     [ProducesResponseType(typeof(ApiResponse<Guid>), StatusCodes.Status500InternalServerError)]
     [ProducesResponseType(typeof(ApiResponse<Guid>), StatusCodes.Status401Unauthorized)]
-    public async Task<IActionResult> Create([FromBody]CreateOrUpdateShoppingListItem command)
-        => await CreateAsync<ShoppingListItem, Guid>(command);
+    public async Task<IActionResult> Create([FromBody]CreateOrUpdateShoppingListCommand command)
+        => await CreateAsync<ShoppingList, Guid>(command);
     
     [HttpPut]
     [ProducesResponseType(typeof(ApiResponse<Guid>), StatusCodes.Status201Created)]
     [ProducesResponseType(typeof(ApiResponse<Guid>), StatusCodes.Status400BadRequest)]
     [ProducesResponseType(typeof(ApiResponse<Guid>), StatusCodes.Status500InternalServerError)]
     [ProducesResponseType(typeof(ApiResponse<Guid>), StatusCodes.Status401Unauthorized)]
-    public async Task<IActionResult> Update(CreateOrUpdateShoppingListItem command)
-        => await ExecuteAsync<CreateOrUpdateShoppingListItem, Guid>
-            (command, result => Ok(new ApiResponse<Guid>(result, "Updated successfully.")));
+    public async Task<IActionResult> Update(CreateOrUpdateShoppingListCommand command)
+        => await UpdateAsync<ShoppingList, Guid>(command);
 }

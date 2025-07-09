@@ -6,6 +6,9 @@ namespace MyAssistant.Persistence.Repositories;
 
 public class ShoppingListRepository(MyAssistantDbContext context) : BaseAsyncRepository<ShoppingList>(context)
 {
+    /// <summary>
+    /// Add the related ShoppingListItems
+    /// </summary>
     public override async Task<ShoppingList> GetByIdAsync(Guid id)
     {
         var list = await base.GetByIdAsync(id);

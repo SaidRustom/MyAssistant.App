@@ -12,5 +12,6 @@ namespace MyAssistant.Core.Contracts.Persistence
         Task UpdateAsync(T entity);
         Task DeleteAsync(T entity);
         Task<bool> ExistsAsync(T entity);
+        Task DetachAsync(T entity);
     }
 }
