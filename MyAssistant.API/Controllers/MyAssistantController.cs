@@ -24,7 +24,27 @@ namespace MyAssistant.API.Controllers
             Mapper = mapper;
         }
 
-        // Unified execution
+        /// <summary>
+        /// Executes the given <paramref name="request"/> using the Mediator and handles the result using the provided <paramref name="onSuccess"/> delegate.
+        /// Centralizes exception handling for common scenarios such as validation errors and unexpected server exceptions,
+        /// returning standardized API responses for each case.
+        /// </summary>
+        /// <typeparam name="TRequest">
+        ///     The type of the request to be processed, which must implement <see cref="IRequest{TResponse}"/>.
+        /// </typeparam>
+        /// <typeparam name="TResponse">
+        ///     The type of the response returned by the request and the delegate.
+        /// </typeparam>
+        /// <param name="request">The request command or query to be sent via Mediator.</param>
+        /// <param name="onSuccess">
+        ///     A delegate that constructs and returns an <see cref="IActionResult"/> from a successful <typeparamref name="TResponse"/>.
+        /// </param>
+        /// <returns>
+        ///     An <see cref="IActionResult"/> representing:
+        ///         - the successful result (<paramref name="onSuccess"/> with response),
+        ///         - a 400 Bad Request with validation errors,
+        ///         - or a 500 Internal Server Error for unhandled exceptions.
+        /// </returns>
         protected async Task<IActionResult> ExecuteAsync<TRequest, TResponse>(
             TRequest request,
             Func<TResponse, IActionResult> onSuccess) where TRequest : IRequest<TResponse>

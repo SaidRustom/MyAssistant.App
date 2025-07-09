@@ -16,7 +16,7 @@ namespace MyAssistant.API.Controllers
         public RecurrenceController(IMediator mediator, IMapper mapper) : base(mediator, mapper) { }
 
         /// <summary>
-        /// Creates a new TaskItem.
+        /// Creates a new Recurrence.
         /// </summary>
         [HttpPost]
         [ProducesResponseType(typeof(ApiResponse<Guid>), StatusCodes.Status201Created)]
