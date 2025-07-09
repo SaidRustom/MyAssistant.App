@@ -1,6 +1,4 @@
 ﻿
-using MyAssistant.Domain.Interfaces;
-
 namespace MyAssistant.Core.Responses
 {
     public class ApiResponse<T> 

@@ -22,9 +22,8 @@ namespace MyAssistant.Domain.Models
         public DateTime? LastPurchaseDate { get; set; }
 
         // IRecurrable implementation:
-        public bool IsRecurring { get; set; }
-        public int? RecurrenceTypeCode { get; set; }
-        public DateTime? RecurrenceEndDate { get; set; }
+        public Guid? RecurrenceId { get; set; }
+        public virtual Recurrence? Recurrence { get; set; }
 
         // Relationships
         [Required]

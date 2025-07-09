@@ -20,6 +20,7 @@ namespace MyAssistant.Persistence
 
         //Entities
         public DbSet<TaskItem> TaskItems { get; set; } = default!;
+        public DbSet<Recurrence> Recurrences { get; set; } = default!;
         public DbSet<Habit> Habits { get; set; } = default!;
         public DbSet<ShoppingList> ShoppingLists { get; set; } = default!;
         public DbSet<ShoppingListItem> ShoppingListItems { get; set; } = default!;

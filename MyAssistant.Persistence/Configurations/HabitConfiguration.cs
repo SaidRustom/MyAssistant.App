@@ -23,6 +23,10 @@ namespace MyAssistant.Persistence.Configurations
                 .HasForeignKey(x => x.GoalId)
                 .OnDelete(DeleteBehavior.NoAction);
 
+            builder.HasOne(x => x.Recurrence)
+                .WithMany()
+                .OnDelete(DeleteBehavior.NoAction);
+
             builder.HasMany(x => x.Shares)
                 .WithOne()
                 .OnDelete(DeleteBehavior.NoAction);

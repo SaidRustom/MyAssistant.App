@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using MyAssistant.Persistence;
 
@@ -11,9 +12,11 @@ using MyAssistant.Persistence;
 namespace MyAssistant.Persistence.Migrations
 {
     [DbContext(typeof(MyAssistantDbContext))]
-    partial class MyAssistantDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250707230523_recurrence1")]
+    partial class recurrence1
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -582,11 +585,11 @@ namespace MyAssistant.Persistence.Migrations
                     b.Property<int>("RecurrenceTypeCode")
                         .HasColumnType("int");
 
-                    b.Property<DateTime>("StartDate")
+                    b.Property<DateTime?>("ScheduledAt")
                         .HasColumnType("datetime2");
 
-                    b.Property<TimeSpan?>("Time")
-                        .HasColumnType("time");
+                    b.Property<DateTime>("StartDate")
+                        .HasColumnType("datetime2");
 
                     b.Property<string>("Title")
                         .IsRequired()
