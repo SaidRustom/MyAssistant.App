@@ -26,7 +26,7 @@ namespace MyAssistant.Domain.Base
 
         public virtual PermissionType PermissionType { get; set; }
 
-        public bool IsActive { get; set; }
+        public bool NotifyUserOnChange { get; set; }
 
         [Required]
         public DateTime SharedAt { get; protected set; } = DateTime.Now;

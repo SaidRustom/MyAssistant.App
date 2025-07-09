@@ -19,6 +19,8 @@ namespace MyAssistant.Domain.Models
         
         public bool IsRead { get; set; }
 
+        public DateTime SentAt { get; set; } = DateTime.Now;
+
         public DateTime? ReadAt { get; set; }
 
         public string? ActionUrl { get; set; }

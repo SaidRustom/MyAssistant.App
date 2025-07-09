@@ -109,7 +109,6 @@ namespace MyAssistant.Persistence
             return await base.SaveChangesAsync(cancellationToken);
         }
 
-
         /// <summary>
         /// The method to be called by background services to handle audit logs accordingly
         /// </summary>

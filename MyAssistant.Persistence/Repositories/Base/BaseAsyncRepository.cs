@@ -23,9 +23,9 @@ namespace MyAssistant.Persistence.Repositories.Base
             return obj;
         }
 
-        public virtual async Task<List<T>> GetAllAsync()
+        public virtual async Task<List<T>> GetAllAsync(Guid userId)
         {
-            var list = await _context.Set<T>().ToListAsync();
+            var list = await _context.Set<T>().Where(x => x.UserId == userId).ToListAsync();
 
             if (typeof(AuditableEntity).IsAssignableFrom(typeof(T)))
             {
@@ -52,9 +52,26 @@ namespace MyAssistant.Persistence.Repositories.Base
             return entity;
         }
 
+        public virtual async Task<int> AddRangeAsync(ICollection<T> entityList)
+        {
+            foreach(var entity in entityList)
+                entity.Id = Guid.NewGuid();
+
+            await _context.Set<T>().AddRangeAsync(entityList);
+            await _context.SaveChangesAsync();
+
+            return entityList.Count;
+        }
+
         public async Task UpdateAsync(T entity)
         {
             _context.Entry(entity).State = EntityState.Modified;
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task UpdateRangeAsync(ICollection<T> entityList)
+        {
+            _context.UpdateRange(entityList);
             await _context.SaveChangesAsync();
         }
 

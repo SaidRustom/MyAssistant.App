@@ -15,6 +15,14 @@ namespace MyAssistant.API.Controllers
 
         public RecurrenceController(IMediator mediator, IMapper mapper) : base(mediator, mapper) { }
 
+        [HttpGet("{id}")]
+        [ProducesResponseType(typeof(ApiResponse<RecurrenceDto>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ApiResponse<RecurrenceDto>), StatusCodes.Status404NotFound)]
+        [ProducesResponseType(typeof(ApiResponse<RecurrenceDto>), StatusCodes.Status500InternalServerError)]
+        public async Task<IActionResult> Get(Guid id)
+            => await GetAsync<Recurrence, RecurrenceDto>(id);
+
+
         /// <summary>
         /// Creates a new Recurrence.
         /// </summary>

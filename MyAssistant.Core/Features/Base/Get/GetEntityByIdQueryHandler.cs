@@ -2,6 +2,7 @@ using AutoMapper;
 using MediatR;
 using MyAssistant.Core.Contracts;
 using MyAssistant.Core.Contracts.Persistence;
+using MyAssistant.Core.Features.Notifications.MarkRead;
 using MyAssistant.Domain.Base;
 using MyAssistant.Domain.Interfaces;
 using MyAssistant.Domain.Lookups;
@@ -29,12 +30,14 @@ namespace MyAssistant.Core.Features.Base.Get
         private readonly IBaseAsyncRepository<TEntity> _repository;
         private readonly IMapper _mapper;
         private readonly Guid _userID;
+        private readonly IMediator _mediator;
 
-        public GetEntityByIdQueryHandler(IBaseAsyncRepository<TEntity> repository, IMapper mapper, ILoggedInUserService userService)
+        public GetEntityByIdQueryHandler(IBaseAsyncRepository<TEntity> repository, IMapper mapper, ILoggedInUserService userService, IMediator mediator)
         {
             _repository = repository ?? throw new ArgumentNullException(nameof(repository));
             _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
             _userID = userService.UserId;
+            _mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
         }
 
         public async Task<TResponse> Handle(GetEntityByIdQuery<TEntity, TResponse> request, CancellationToken cancellationToken)
@@ -48,7 +51,9 @@ namespace MyAssistant.Core.Features.Base.Get
 
             var entityToReturn = _mapper.Map<TEntity, TResponse>(entity);
 
-            ValidateAccessPermission(entityToReturn); 
+            ValidateAccessPermission(entityToReturn);
+            await _mediator.Send(new MarkEntityNotificationsReadCommand(entityToReturn.Id));
+
             return entityToReturn;
         }
 

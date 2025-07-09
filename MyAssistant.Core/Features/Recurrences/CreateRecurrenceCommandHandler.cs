@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using MediatR;
 using MyAssistant.Core.Contracts.Persistence;
+using MyAssistant.Core.Features.Notifications.Create;
 using MyAssistant.Domain.Lookups;
 using MyAssistant.Domain.Models;
 using MyAssistant.Shared.DTOs;
@@ -36,6 +37,7 @@ namespace MyAssistant.Core.Features.Recurrences
             var recurrence = _mapper.Map<Recurrence>(request);
             recurrence = await _repo.AddAsync(recurrence);
 
+            List<TaskItem> tasks = new();
             foreach(var date in GetRequestOccurrences(recurrence))
             {
                 TaskItem item = new()
@@ -53,11 +55,15 @@ namespace MyAssistant.Core.Features.Recurrences
                         .AddHours(recurrence.Time.Value.Hours)
                         .AddMinutes(recurrence.Time.Value.Minutes);
                 
-
-                await _taskRepo.AddAsync(item);
+                tasks.Add(item);              
             }
 
-            //TODO: Log the # of occurences added 
+            var addedTaskCount = await _taskRepo.AddRangeAsync(tasks);
+
+            CreateNotificationCommand cmd = new(recurrence, recurrence.UserId,
+                "Recurrences added successfully", $"{addedTaskCount} Occurrences added for {recurrence.Title}");
+
+            await _mediator.Send(cmd);
 
             return recurrence.Id;
         }
