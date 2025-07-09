@@ -5,6 +5,9 @@ using MyAssistant.Domain.Interfaces;
 
 namespace MyAssistant.Domain.Models
 {
+    /// <summary>
+    /// Represents an item within a shopping list, including details such as quantity, pricing, recurrence, and related shopping list.
+    /// </summary>
     [Table("ShoppingListItem")]
     public class ShoppingListItem : EntityBase, IRecurrable
     {

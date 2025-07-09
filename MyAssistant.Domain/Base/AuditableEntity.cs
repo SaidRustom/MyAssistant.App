@@ -8,7 +8,9 @@ namespace MyAssistant.Domain.Base
     /// </summary>
     public abstract class AuditableEntity : EntityBase
     {
-        // Reference to all audit events for this entity
+        /// <summary>
+        /// Reference to all audit events for this entity
+        /// </summary>
         [NotMapped]
         public virtual ICollection<AuditLog>? AuditLogs { get; set; } = new List<AuditLog>();
     }

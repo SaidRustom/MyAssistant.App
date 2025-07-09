@@ -4,8 +4,11 @@ using MyAssistant.Domain.Base;
 
 namespace MyAssistant.Domain.Models
 {
+    /// <summary>
+    /// Represents a chat message entity exchanged between users.
+    /// </summary>
     [Table("ChatMessage")]
-    public class ChatMessage : AuditableEntity
+    public class ChatMessage : EntityBase
     {
         [Required]
         public Guid ReceiverUserId { get; set; }

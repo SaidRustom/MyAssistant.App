@@ -6,7 +6,7 @@ using MyAssistant.Domain.Lookups;
 namespace MyAssistant.Domain.Base
 {
     /// <summary>
-    /// Describes who has shared access to a given entity.
+    /// Represents a record of an entity being shared with a user, along with the associated permissions.
     /// </summary>
     [Table("EntityShare")]
     public class EntityShare : EntityBase

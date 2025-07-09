@@ -28,7 +28,7 @@ namespace MyAssistant.Domain.Base
         public AuditLog() { }
 
         /// <summary>
-        /// Creating a new instance requires an EntityBase
+        /// Creating a new instance from an EntityBase
         /// </summary>
         public AuditLog(string entityType, IEntityBase entity, Guid userId, int actionTypeCode)
         {
@@ -40,12 +40,13 @@ namespace MyAssistant.Domain.Base
         }
 
         /// <summary>
-        /// The UserId used by all background services for audit
+        /// The UserId used by all background services for audit (MyAssitantService)
         /// </summary>
-        public readonly Guid MyAssistantServiceUserId = Guid.Parse("D25A2F08-BB7B-42B0-BC2C-7D1BFEDB76EC");
+        public readonly Guid MyAssistantServiceUserId = Guid.Parse("D25A2F08-BB7B-42B0-BC2C-7D1BFEDB76EC");  //TODO: Add the id to env variables
 
         /// <summary>
-        /// Used by background services..
+        /// Initializes a new instance of the <see cref="AuditLog"/> class with the specified entity details and action context.
+        /// Primarily used by background services to record audit trail events for entities processed by the system.
         /// </summary>
         public AuditLog(string entityType, IEntityBase entity, MyAssistantServiceType serviceType, int actionTypeCode)
         {

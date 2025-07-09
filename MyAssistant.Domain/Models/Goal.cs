@@ -7,7 +7,7 @@ namespace MyAssistant.Domain.Models
 {
     [Table("Goal")]
     public class Goal : AuditableEntity, IShareable<Goal>, IBillable<Goal>
-    {
+    { //TODO: add progress features
         [Required, StringLength(200)]
         public string Title { get; set; } = default!;
 

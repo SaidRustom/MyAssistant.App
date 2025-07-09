@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace MyAssistant.Domain.Base
 {
     /// <summary>
-    /// Base class for Lookups which are small objects consisting of Code & Desc
+    /// Base class for Lookups (objects consisting of Code & Desc)
     /// </summary>
     /// <typeparam name="T"></typeparam>
     [Serializable]

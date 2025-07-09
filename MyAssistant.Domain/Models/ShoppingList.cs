@@ -5,6 +5,10 @@ using MyAssistant.Domain.Interfaces;
 
 namespace MyAssistant.Domain.Models
 {
+    /// <summary>
+    /// Represents a shopping list entity, including its items, related billing information,
+    /// and sharing capabilities
+    /// </summary>
     [Table("ShoppingList")]
     public class ShoppingList : AuditableEntity, IShareable<ShoppingList>, IBillable<ShoppingList>
     {

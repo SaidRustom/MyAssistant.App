@@ -5,6 +5,9 @@ using MyAssistant.Domain.Lookups;
 
 namespace MyAssistant.Domain.Models
 {
+    /// <summary>
+    /// Represents a recurring schedule entity used to define repeated events or tasks.
+    /// </summary>
     [Table("Recurrence")]
     public class Recurrence : AuditableEntity
     {

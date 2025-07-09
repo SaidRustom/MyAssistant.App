@@ -4,6 +4,10 @@ using MyAssistant.Domain.Base;
 
 namespace MyAssistant.Domain.Models
 {
+    /// <summary>
+    /// Represents a connection (friendship or contact request) between users,
+    /// including request status, timestamps, and optional status messages.
+    /// </summary>
     [Table("UserConnection")]
     public class UserConnection : AuditableEntity
     {

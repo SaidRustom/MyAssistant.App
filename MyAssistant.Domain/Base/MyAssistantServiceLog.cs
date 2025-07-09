@@ -4,6 +4,10 @@ using MyAssistant.Domain.Lookups;
 
 namespace MyAssistant.Domain.Base
 {
+    /// <summary>
+    /// Represents a log record for actions performed by the MyAssistant service.
+    /// Captures important details such as the service type, timestamps for operation start and end, and any result description.
+    /// </summary>
     [Table("MyAssistantServiceLog")]
     public class MyAssistantServiceLog
     {

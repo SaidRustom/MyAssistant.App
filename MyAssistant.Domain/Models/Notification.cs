@@ -5,6 +5,9 @@ using MyAssistant.Domain.Interfaces;
 
 namespace MyAssistant.Domain.Models
 {
+    /// <summary>
+    /// Represents a user notification entity with properties for title, message, read status,
+    /// </summary>
     [Table("Notification")]
     public class Notification : AuditableEntity
     {
@@ -24,8 +27,7 @@ namespace MyAssistant.Domain.Models
         
         public string? ObjectType { get; set; } 
         
-        public Guid? ObjectId { get; set; }
-        
+        public Guid? ObjectId { get; set; }       
     }
 
 }

@@ -5,6 +5,9 @@ using MyAssistant.Domain.Interfaces;
 
 namespace MyAssistant.Domain.Models
 {
+    /// <summary>
+    /// Represents a task item with scheduling, completion, priority, recurrence, and sharing capabilities.
+    /// </summary>
     [Table("TaskItem")]
     public class TaskItem : AuditableEntity, IShareable<TaskItem>, IRecurrable
     {
