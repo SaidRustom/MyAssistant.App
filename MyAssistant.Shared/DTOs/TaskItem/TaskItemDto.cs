@@ -4,6 +4,7 @@ using MyAssistant.Domain.Models;
 
 namespace MyAssistant.Shared.DTOs
 {
+    public class TaskItemDto : CreateOrUpdateTaskItemCommand, IDto<TaskItem>, IShareableDto<TaskItem>
     {
         public new Guid Id { get; set; }
 

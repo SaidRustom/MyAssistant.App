@@ -46,8 +46,12 @@ namespace MyAssistant.Core.Features.Base.Get
             return entityToReturn;
         }
 
+        #region Helper Methods
+
         /// <summary>
         /// Throw exception if user cannot access the entity & Include PermissionType for Shareable type entities
+        /// This is called after db retrival to include ShareWith users
+        /// Could be improved by separating into 2 methods (one for permission & one for access validation using fluent)
         /// </summary>
         void ValidateAccessPermission(TResponse dto)
         {
@@ -61,7 +65,7 @@ namespace MyAssistant.Core.Features.Base.Get
                 if (dto.UserId.Equals(_userID))
                     return;
                 else
-                    throw new AccessViolationException("User doesn't have access");
+                    throw new UnauthorizedAccessException($"Unauthorized access");
             }
 
             PermissionType permission = new();
@@ -74,17 +78,19 @@ namespace MyAssistant.Core.Features.Base.Get
             else
             {
                 ICollection<EntityShare> shares = new List<EntityShare>();
-                var prop = shareableDtoInterface.GetProperty("Shares").GetValue(shares);
+                var prop = shareableDtoInterface.GetProperty("Shares")!.GetValue(shares);
 
                 var share = shares.FirstOrDefault(share => share.SharedWithUserId == _userID)
-                    ?? throw new AccessViolationException("User doesn't have access");
+                    ?? throw new UnauthorizedAccessException("Unauthorized access");
 
                 permission = share.PermissionType;
             }
 
-            //Populate PermissionType in the returned Dto
+            //Populate PermissionType in the returned Dto (Interface enforced)
             var permissionProp = shareableDtoInterface.GetProperty("PermissionType");
-            permissionProp.SetValue(dto, permission, null);
+            permissionProp!.SetValue(dto, permission, null);
         }
+
+        #endregion
     }
 }
