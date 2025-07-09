@@ -15,6 +15,12 @@ namespace MyAssistant.Core.Features.Base.Get
         where TResponse : IDto<TEntity>
     { }
 
+    /// <summary>
+    /// Handles the retrieval of a specific <typeparamref name="TEntity"/> by its identifier.
+    /// Throws a <see cref="KeyNotFoundException"/> if the entity does not exist. 
+    /// The method also maps the entity to the result DTO type <typeparamref name="TResponse"/> 
+    /// and verifies access permissions before returning the result.
+    /// </summary>
     public class GetEntityByIdQueryHandler<TEntity, TResponse> :
         IGetEntityByIdQueryHandler<TEntity, TResponse>
         where TEntity : class, IEntityBase
@@ -22,7 +28,7 @@ namespace MyAssistant.Core.Features.Base.Get
     {
         private readonly IBaseAsyncRepository<TEntity> _repository;
         private readonly IMapper _mapper;
-        private readonly Guid _userID; 
+        private readonly Guid _userID;
 
         public GetEntityByIdQueryHandler(IBaseAsyncRepository<TEntity> repository, IMapper mapper, ILoggedInUserService userService)
         {
@@ -83,7 +89,7 @@ namespace MyAssistant.Core.Features.Base.Get
                 var share = shares.FirstOrDefault(share => share.SharedWithUserId == _userID)
                     ?? throw new UnauthorizedAccessException("Unauthorized access");
 
-                permission = share.PermissionType;
+                permission = PermissionTypeList.Get(share.PermissionTypeCode);
             }
 
             //Populate PermissionType in the returned Dto (Interface enforced)

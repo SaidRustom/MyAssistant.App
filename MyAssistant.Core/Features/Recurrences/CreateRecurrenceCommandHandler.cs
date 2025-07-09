@@ -15,6 +15,13 @@ namespace MyAssistant.Core.Features.Recurrences
         private readonly IBaseAsyncRepository<TaskItem> _taskRepo;
         private readonly IMapper _mapper;
 
+        /// <summary>
+        /// Creates a new <see cref="Recurrence"/> 
+        /// and generates associated <see cref="TaskItem"/> instances for each occurrence date.
+        /// Maps the command to a recurrence entity, persists it, computes each occurrence date,
+        /// and adds corresponding task items to the repository.
+        /// Returns the ID of the newly created recurrence.
+        /// </summary>
         public CreateRecurrenceCommandHandler(IBaseAsyncRepository<Recurrence> repo, IBaseAsyncRepository<TaskItem> taskRepo ,IMediator mediator, IMapper mapper)
         {
             _repo = repo;
@@ -55,6 +62,13 @@ namespace MyAssistant.Core.Features.Recurrences
             return recurrence.Id;
         }
 
+        /// <summary>
+        /// Generates a series of occurrence dates based on the specified recurrence pattern.
+        /// The occurrences start from the given StartDate and continue up to EndDate
+        /// (if provided), or until the maximum allowed number of occurrences is reached.
+        /// The recurrence type (daily, weekly, monthly, annually) and interval are defined
+        /// by the Recurrence request parameter.
+        /// </summary>
         public IEnumerable<DateTime> GetRequestOccurrences(Recurrence request)
         {
             List<DateTime> result = new List<DateTime>();
@@ -79,8 +93,6 @@ namespace MyAssistant.Core.Features.Recurrences
                 if (request.RecurrenceTypeCode == RecurrenceType.Annually)
                     occurrence = occurrence.AddYears(request.Interval);
             }
-
-
 
             return result;
         }

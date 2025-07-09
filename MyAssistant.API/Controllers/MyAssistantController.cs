@@ -50,6 +50,17 @@ namespace MyAssistant.API.Controllers
             }
         }
 
+        /// <summary>
+        /// Retrieves an entity of type <typeparamref name="TEntity"/> by its identifier,
+        /// executes the associated query, and returns a formatted API response wrapping the result
+        /// mapped to <typeparamref name="TResponse"/>.
+        /// </summary>
+        /// <typeparam name="TEntity">The entity type to retrieve. Must implement <see cref="IEntityBase"/>.</typeparam>
+        /// <typeparam name="TResponse">The response DTO type. Must implement <see cref="IDto{TEntity}"/>.</typeparam>
+        /// <returns>
+        /// An <see cref="IActionResult"/> containing an <see cref="ApiResponse{TResponse}"/> if found,
+        /// or an appropriate HTTP status code otherwise.
+        /// </returns>
         [HttpGet("{id}")]
         protected virtual async Task<IActionResult> GetAsync<TEntity, TResponse>(Guid id)
             where TEntity : class, IEntityBase
@@ -61,6 +72,16 @@ namespace MyAssistant.API.Controllers
                 query, result => Ok(new ApiResponse<TResponse>(result)));
         }
 
+        /// <summary>
+        /// Handles HTTP POST requests for creating a new entity of type <typeparamref name="TEntity"/>.
+        /// Maps the incoming <paramref name="command"/> to an entity object, wraps it in a creation command,
+        /// and executes it. Returns a 201 Created response upon successful creation, 
+        /// along with the response payload wrapped in an <see cref="ApiResponse{TResponse}"/>.
+        /// </summary>
+        /// <typeparam name="TEntity">The type of entity being created.</typeparam>
+        /// <typeparam name="TResponse">The type of response returned after creation.</typeparam>
+        /// <param name="command">The input command object mapped to <typeparamref name="TEntity"/>.</param>
+        /// <returns>An <see cref="IActionResult"/> including the UID of the created entity.</returns>
         [HttpPost]
         protected virtual async Task<IActionResult> CreateAsync<TEntity, TResponse>(IMapWith<TEntity> command)
             where TEntity : class, IEntityBase
@@ -72,7 +93,15 @@ namespace MyAssistant.API.Controllers
                 cmd, result => Created(string.Empty, new ApiResponse<TResponse>(result, "Created successfully.")));
         }
 
-
+        /// <summary>
+        /// Handles the HTTP PUT request to update an existing entity.
+        /// Maps the input command to the entity type, wraps it in an update command,
+        /// and executes the update operation asynchronously. Returns a standardized API response upon success.
+        /// </summary>
+        /// <typeparam name="TEntity">The type of the entity to be updated.</typeparam>
+        /// <typeparam name="TResponse">The type of the response returned to the client.</typeparam>
+        /// <param name="command">The command object containing updated values for the entity.</param>
+        /// <returns>An <see cref="IActionResult"/> containing the API response for the update operation.</returns>
         [HttpPut]
         protected virtual async Task<IActionResult> UpdateAsync<TEntity, TResponse>(IMapWith<TEntity> command)
             where TEntity : class, IEntityBase
@@ -83,7 +112,19 @@ namespace MyAssistant.API.Controllers
             return await ExecuteAsync<IRequest<TResponse>, TResponse>(cmd, result => Ok(new ApiResponse<TResponse>(result, "Updated successfully.")));
         }
 
-
+        /// <summary>
+        /// Handles HTTP DELETE requests by executing the specified command using the Mediator pattern.
+        /// </summary>
+        /// <typeparam name="TCommand">
+        ///     A command type that implements <see cref="IRequest{Unit}"/> and represents the delete operation.
+        /// </typeparam>
+        /// <param name="command">The command object containing parameters required to perform the delete action.</param>
+        /// <returns>
+        ///     An <see cref="IActionResult"/> representing the outcome of the operation.
+        ///     - 200 OK with a success message if the command is handled successfully.
+        ///     - 400 Bad Request with validation errors if validation fails.
+        ///     - 500 Internal Server Error with an error message for unhandled exceptions.
+        /// </returns>
         [HttpDelete("{id}")]
         protected virtual async Task<IActionResult> DeleteAsync<TCommand>(TCommand command)
             where TCommand : IRequest<Unit>

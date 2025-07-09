@@ -175,10 +175,11 @@ namespace MyAssistant.Persistence
         }
 
         /// <summary>
-        /// USE WITH CAUTION!! used to Save ServiceLogs etc..
+        /// USE WITH CAUTION!! used to Save ServiceLogs etc
         /// </summary>
         public async Task<int> SurpassAuditAndSaveAsync(CancellationToken cancellationToken = default)
         {
+            //TODO: Create a seperate DbContext for logging and remove this..
             return await base.SaveChangesAsync(cancellationToken);
         }
 

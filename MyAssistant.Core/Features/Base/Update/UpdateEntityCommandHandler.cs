@@ -11,6 +11,12 @@ namespace MyAssistant.Core.Features.Base.Update
     where TEntity : class, IEntityBase
     { }
 
+    /// <summary>
+    /// Handles the update operation for a given entity.
+    /// Trigger the Validator of the provided entity, and updates it in the repository.
+    /// Returns the unique identifier of the updated entity.
+    /// Throws <see cref="ArgumentNullException"/> if the request or entity is null.
+    /// </summary>
     public class UpdateEntityCommandHandler<TEntity>(
     IBaseAsyncRepository<TEntity> repository,
     IServiceProvider serviceProvider)
@@ -31,6 +37,12 @@ namespace MyAssistant.Core.Features.Base.Update
             return request.Entity.Id;
         }
 
+        /// <summary>
+        /// Validates the provided entity using a runtime-discovered validator implementing <see cref="AbstractValidator{TEntity}"/>.
+        /// Searches the current assembly for a non-abstract, non-interface validator type, 
+        /// resolves it from the service provider, and performs asynchronous validation.
+        /// Throws <see cref="ValidationException"/> if the entity fails validation. 
+        /// </summary>
         private async Task ValidateEntityAsync(TEntity entity, CancellationToken cancellationToken)
         {
             //Runtime Validator Auto-discovery, could be improved....

@@ -12,6 +12,11 @@ namespace MyAssistant.Core.Features.Base.Create
         where TEntity : class, IEntityBase
     { }
 
+    /// <summary>
+    /// Handles the creation of a new entity by validating the provided entity,
+    /// persisting it to the repository, and returning its ID.
+    /// Throws <see cref="ArgumentNullException"/> if the request or entity is null.
+    /// </summary>
     public class CreateEntityCommandHandler<TEntity>(
         IBaseAsyncRepository<TEntity> repository,
         IServiceProvider serviceProvider)
@@ -34,6 +39,12 @@ namespace MyAssistant.Core.Features.Base.Create
             return request.Entity.Id;
         }
 
+        /// <summary>
+        /// Validates the provided entity using a runtime-discovered validator implementing <see cref="AbstractValidator{TEntity}"/>.
+        /// Searches the current assembly for a non-abstract, non-interface validator type, 
+        /// resolves it from the service provider, and performs asynchronous validation.
+        /// Throws <see cref="ValidationException"/> if the entity fails validation. 
+        /// </summary>
         private async Task ValidateEntityAsync(TEntity entity, CancellationToken cancellationToken)
         {
             //Runtime Validator Auto-discovery, could be improved....

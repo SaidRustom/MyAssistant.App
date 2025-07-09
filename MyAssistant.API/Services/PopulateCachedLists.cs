@@ -8,7 +8,6 @@ namespace MyAssistant.API.Services
 {
     /// <summary>
     /// Responsible for populating and caching lookup lists from the database.
-    /// 
     /// This class uses reflection to discover all relevant lookup list types, queries their data from the 
     /// Entity Framework DbContext, and stores the results into each list's static cache property. 
     /// This enables efficient reuse of lookup data across the application without repeated database fetches.

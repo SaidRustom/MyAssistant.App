@@ -74,8 +74,6 @@ namespace MyAssistant.Persistence.Repositories.Base
         /// <summary>
         /// Add the audit logs of the AuditableEntity
         /// </summary>
-        /// <param name="auditable"></param>
-        /// <returns></returns>
         private async Task<AuditableEntity> IncludeAuditLogAsync(AuditableEntity auditable)
         {
             auditable.AuditLogs = await _context.AuditLogs
@@ -87,6 +85,9 @@ namespace MyAssistant.Persistence.Repositories.Base
             return auditable;
         }
 
+        /// <summary>
+        /// Add the Shares of the IShareable entity
+        /// </summary>
         private async Task<IShareable<T>> IncludeSharesAsync(IShareable<T> shareable)
         {
             shareable.Shares = await _context.EntityShares
