@@ -3,6 +3,7 @@ using System.Reflection;
 using MediatR;
 using MyAssistant.Core.Contracts.Persistence;
 using MyAssistant.Domain.Interfaces;
+using MyAssistant.Core.Contracts;
 
 namespace MyAssistant.Core.Features.Base.Update
 {
@@ -19,16 +20,20 @@ namespace MyAssistant.Core.Features.Base.Update
     /// </summary>
     public class UpdateEntityCommandHandler<TEntity>(
     IBaseAsyncRepository<TEntity> repository,
+    ILoggedInUserService loggedInUserService,
     IServiceProvider serviceProvider)
     : IUpdateEntityCommandHandler<TEntity>
     where TEntity : class, IEntityBase, new()
     {
+        private readonly ILoggedInUserService _loggedInUserService = loggedInUserService;
         private readonly IServiceProvider _serviceProvider = serviceProvider;
 
         public async Task<Guid> Handle(UpdateEntityCommand<TEntity> request, CancellationToken cancellationToken)
         {
             if (request is null) throw new ArgumentNullException(nameof(request));
             if (request.Entity is null) throw new ArgumentNullException(nameof(request.Entity));
+
+            await repository.ValidateCanEditAsync(request.Entity.Id, _loggedInUserService.UserId);
 
             await ValidateEntityAsync(request.Entity, cancellationToken);
 

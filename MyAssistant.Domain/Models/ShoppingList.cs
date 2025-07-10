@@ -18,6 +18,8 @@ namespace MyAssistant.Domain.Models
         [StringLength(1000)]
         public string? Description { get; set; }
 
+        public DateOnly CreatedDate { get; set; } = DateOnly.FromDateTime(DateTime.Now);
+
         public virtual ICollection<ShoppingListItem> Items { get; set; } = new List<ShoppingListItem>();
 
         // IShareable Implementation

@@ -9,7 +9,7 @@ namespace MyAssistant.Domain.Models
     /// Represents an item within a shopping list, including details such as quantity, pricing, recurrence, and related shopping list.
     /// </summary>
     [Table("ShoppingListItem")]
-    public class ShoppingListItem : EntityBase, IRecurrable
+    public class ShoppingListItem : AuditableEntity, IRecurrable
     {
         [Required, StringLength(200)]
         public string Name { get; set; } = default!;
@@ -17,6 +17,8 @@ namespace MyAssistant.Domain.Models
         public int Quantity { get; set; }
 
         public bool IsActive { get; set; } = true;
+
+        public int TotalPurchaseCount { get; set; }
 
         public decimal? UnitPrice { get; set; }
 

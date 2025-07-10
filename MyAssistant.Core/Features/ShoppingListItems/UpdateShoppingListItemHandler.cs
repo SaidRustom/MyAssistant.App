@@ -40,6 +40,7 @@ public class UpdateShoppingListItemHandler : IRequestHandler<CreateOrUpdateShopp
 
         if (old.IsActive != cmd.IsActive && !cmd.IsActive)
         {
+            obj.TotalPurchaseCount = obj.TotalPurchaseCount + obj.Quantity;
             obj.Quantity = 0;
             obj.LastPurchaseDate = DateTime.Now;
         }

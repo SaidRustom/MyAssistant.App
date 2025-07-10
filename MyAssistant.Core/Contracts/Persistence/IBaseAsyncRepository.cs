@@ -1,4 +1,5 @@
 ﻿using MyAssistant.Domain.Interfaces;
+using MyAssistant.Domain.Lookups;
 
 namespace MyAssistant.Core.Contracts.Persistence
 {
@@ -13,5 +14,8 @@ namespace MyAssistant.Core.Contracts.Persistence
         Task DeleteAsync(T entity);
         Task<bool> ExistsAsync(T entity);
         Task DetachAsync(T entity);
+        Task<bool> ValidateCanGetAsync(Guid entityId, Guid userId);
+        Task<bool> ValidateCanEditAsync(Guid entityId, Guid userId);
+        Task<PermissionType> GetUserPermissionTypeAsync(Guid entityId, Guid userId);
     }
 }

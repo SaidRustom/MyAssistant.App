@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using MyAssistant.Persistence;
 
@@ -11,9 +12,11 @@ using MyAssistant.Persistence;
 namespace MyAssistant.Persistence.Migrations
 {
     [DbContext(typeof(MyAssistantDbContext))]
-    partial class MyAssistantDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250710031532_shoppingListItem_Edit_1")]
+    partial class shoppingListItem_Edit_1
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -610,9 +613,6 @@ namespace MyAssistant.Persistence.Migrations
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateOnly>("CreatedDate")
-                        .HasColumnType("date");
 
                     b.Property<string>("Description")
                         .HasMaxLength(1000)

@@ -19,6 +19,7 @@ namespace MyAssistant.Persistence
             services.AddScoped(typeof(IBaseAsyncRepository<>), typeof(BaseAsyncRepository<>));
             services.AddScoped<IGoalRepository, GoalRepository>();
             services.AddScoped<INotificationRepository, NotificationRepository>();
+            services.AddScoped<IShoppingListRepository, ShoppingListRepository>();
 
             return services;
         }

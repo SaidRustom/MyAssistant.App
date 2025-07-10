@@ -2,6 +2,8 @@
 using MyAssistant.Core.Contracts.Persistence;
 using MyAssistant.Domain.Base;
 using MyAssistant.Domain.Interfaces;
+using MyAssistant.Domain.Lookups;
+using MyAssistant.Shared;
 
 namespace MyAssistant.Persistence.Repositories.Base
 {
@@ -100,12 +102,55 @@ namespace MyAssistant.Persistence.Repositories.Base
             }
         }
 
+        /// <summary>
+        /// Wheather the user can read the entity
+        /// </summary>
+        public async Task<bool> ValidateCanGetAsync(Guid entityId, Guid userId)
+        {
+            return (await GetUserPermissionTypeAsync(entityId, userId)) is not null;
+        }
+
+        public async Task<bool> ValidateCanEditAsync(Guid entityId, Guid userId)
+        {
+            var permissionTypeCode = (await GetUserPermissionTypeAsync(entityId, userId)).Code;
+            return permissionTypeCode != PermissionType.Read;
+        }
+
+        public async Task<PermissionType> GetUserPermissionTypeAsync(Guid entityId, Guid userId)
+        {
+            var entity = await _context.Set<T>().FindAsync(entityId);
+            await DetachAsync(entity);
+
+            if (entity == null)
+                throw new Exception($"{typeof(T).Name} - {entityId} does not exist");
+
+            if (entity.UserId.Equals(userId)) //The owner of the entity - all permissions
+                return PermissionTypeList.Get(PermissionType.ReadWriteDelete);
+
+            var shareable = entity
+                .GetType()
+                .GetInterfaces()
+                .FirstOrDefault(i => i.IsGenericType && i.GetGenericTypeDefinition() == typeof(IShareable<>));
+
+            if (shareable == null) //Not a shareable type, throw an exception
+                throw new UnauthorizedAccessException();
+
+            var share = await _context.EntityShares
+                .Where(x => x.SharedWithUserId == userId && x.EntityId == entity.Id)
+                .FirstOrDefaultAsync();
+
+            if (share == null)
+                throw new UnauthorizedAccessException();
+
+            return share.PermissionType;
+        }
+
         #region Helper Methods
         
         /// <summary>
         /// Add the audit logs of the AuditableEntity
         /// </summary>
-        private async Task<AuditableEntity> IncludeAuditLogAsync(AuditableEntity auditable)
+        protected async Task<AuditableEntity> IncludeAuditLogAsync(AuditableEntity auditable)
         {
             auditable.AuditLogs = await _context.AuditLogs
                 .Where(x => x.EntityId == auditable.Id)
@@ -119,7 +164,7 @@ namespace MyAssistant.Persistence.Repositories.Base
         /// <summary>
         /// Add the Shares of the IShareable entity
         /// </summary>
-        private async Task<IShareable<T>> IncludeSharesAsync(IShareable<T> shareable)
+        protected async Task<IShareable<T>> IncludeSharesAsync(IShareable<T> shareable)
         {
             shareable.Shares = await _context.EntityShares
                 .Where(x => x.EntityId == shareable.Id)

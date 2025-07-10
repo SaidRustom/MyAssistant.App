@@ -1,6 +1,7 @@
 using AutoMapper;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using MyAssistant.Core.Features.ShoppingLists;
 using MyAssistant.Core.Responses;
 using MyAssistant.Domain.Models;
 using MyAssistant.Shared.DTOs;
@@ -15,7 +16,8 @@ public class ShoppingListController(IMediator mediator, IMapper mapper) :
     [ProducesResponseType(typeof(ApiResponse<ShoppingListDto>), StatusCodes.Status404NotFound)]
     [ProducesResponseType(typeof(ApiResponse<ShoppingListDto>), StatusCodes.Status500InternalServerError)]
     public async Task<IActionResult> Get(Guid id)
-        => await GetAsync<ShoppingList, ShoppingListDto>(id);
+        => await ExecuteAsync<GetShoppingListQuery, ShoppingListDto>
+                (new GetShoppingListQuery() {Id = id}, result => Ok(new ApiResponse<ShoppingListDto>(result, "Success"))); 
     
     [HttpPost]
     [ProducesResponseType(typeof(ApiResponse<Guid>), StatusCodes.Status201Created)]

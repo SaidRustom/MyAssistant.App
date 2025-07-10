@@ -1,4 +1,5 @@
 using System.Collections.ObjectModel;
+using System.Security;
 using AutoMapper;
 using MediatR;
 using MyAssistant.Core.Contracts;
@@ -46,13 +47,13 @@ namespace MyAssistant.Core.Features.Base.Get
             if (request == null)
                 throw new ArgumentNullException(nameof(request));
 
+            await _repository.ValidateCanGetAsync(request.Id, _userID);
+
             var entity = await _repository.GetByIdAsync(request.Id);
-            if (entity == null)
-                throw new KeyNotFoundException($"{typeof(TEntity).Name} with id '{request.Id}' was not found.");
 
             var entityToReturn = _mapper.Map<TEntity, TResponse>(entity);
 
-            ValidateAccessPermission(entityToReturn);
+            AddPermissionTypeToShareableDtos(entityToReturn);
             await _mediator.Send(new MarkEntityNotificationsReadCommand(entityToReturn.Id));
 
             return entityToReturn;
@@ -65,58 +66,21 @@ namespace MyAssistant.Core.Features.Base.Get
         /// This is called after db retrival to include ShareWith users
         /// Could be improved by separating into 2 methods (one for permission & one for access validation using fluent)
         /// </summary>
-        void ValidateAccessPermission(TResponse dto)
+        async void AddPermissionTypeToShareableDtos(TResponse dto)
         {
             var shareableDtoInterface = dto
                 .GetType()
                 .GetInterfaces()
                 .FirstOrDefault(i => i.IsGenericType && i.GetGenericTypeDefinition() == typeof(IShareableDto<>));
 
-            if (shareableDtoInterface == null) //Not a shareable type
+            if(shareableDtoInterface != null)
             {
-                if (dto.UserId.Equals(_userID))
-                    return;
-                else
-                    throw new UnauthorizedAccessException($"Unauthorized access");
+                var permission = await _repository.GetUserPermissionTypeAsync(dto.Id, _userID);
+
+                //Populate PermissionType in the returned Dto (Interface enforced)
+                var permissionProp = shareableDtoInterface.GetProperty("PermissionType");
+                permissionProp!.SetValue(dto, permission, null);
             }
-
-            PermissionType permission = new();
-
-            if (dto.UserId.Equals(_userID)) //Current user is owner of the object
-            {
-                permission = PermissionTypeList.Get(PermissionType.ReadWriteDelete);
-            }
-
-            else
-            {
-                ICollection<EntityShare> shares = new List<EntityShare>();
-                
-                var sharesPropertyInfo = shareableDtoInterface.GetProperty("Shares");
-
-                // Correctly get the value from DTO instance
-                var sharesValue = sharesPropertyInfo?.GetValue(dto);
-
-                // Since the returned type is a Collection<EntityShare>, explicitly cast it to that or ICollection<EntityShare>
-                if (sharesValue is ICollection<EntityShare> entitySharesCollection)
-                {
-                    // assign correctly casted value
-                    shares = entitySharesCollection;
-                }
-                else
-                {
-                    // handle if not correct type
-                    shares = new List<EntityShare>();
-                }
-
-                var share = shares.FirstOrDefault(share => share.SharedWithUserId == _userID)
-                    ?? throw new UnauthorizedAccessException("Unauthorized access");
-
-                permission = PermissionTypeList.Get(share.PermissionTypeCode);
-            }
-
-            //Populate PermissionType in the returned Dto (Interface enforced)
-            var permissionProp = shareableDtoInterface.GetProperty("PermissionType");
-            permissionProp!.SetValue(dto, permission, null);
         }
 
         #endregion
