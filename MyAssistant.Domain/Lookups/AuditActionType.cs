@@ -1,8 +1,10 @@
 ﻿
+using System.ComponentModel.DataAnnotations.Schema;
 using MyAssistant.Domain.Base;
 
 namespace MyAssistant.Domain.Lookups
 {
+    [Table("AuditActionType")]
     public class AuditActionType : LookupBase<AuditActionType>
     {
         public static readonly int Create = 1;

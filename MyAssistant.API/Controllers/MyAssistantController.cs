@@ -9,6 +9,8 @@ using MyAssistant.Core.Features.Base.Create;
 using MyAssistant.Core.Features.Base.Update;
 using MyAssistant.Core.Features.Base.Get;
 using MyAssistant.Core.Features.Base.GetList;
+using MyAssistant.Persistence.Repositories.Base;
+using MyAssistant.Core.Contracts.Persistence;
 
 namespace MyAssistant.API.Controllers
 {

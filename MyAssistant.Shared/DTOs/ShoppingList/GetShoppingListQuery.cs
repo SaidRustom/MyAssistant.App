@@ -1,7 +1,7 @@
 ﻿using MediatR;
 using MyAssistant.Shared.DTOs;
 
-namespace MyAssistant.Core.Features.ShoppingLists;
+namespace MyAssistant.Core.Features.ShoppingLists.Get;
 
 public class GetShoppingListQuery : IRequest<ShoppingListDto>
 {

@@ -8,7 +8,7 @@ namespace MyAssistant.Domain.Base
     /// </summary>
     /// <typeparam name="T"></typeparam>
     [Serializable]
-    public abstract class LookupBase<T> where T : new()
+    public abstract class LookupBase<T> where T : class, new()
     {
         [Key]
         public int Code { get; set; }

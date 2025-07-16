@@ -1,4 +1,5 @@
-﻿using System.Linq.Expressions;
+﻿using System.Collections.Generic;
+using System.Linq.Expressions;
 using Microsoft.EntityFrameworkCore;
 using MyAssistant.Core.Contracts.Persistence;
 using MyAssistant.Domain.Base;
@@ -44,7 +45,7 @@ namespace MyAssistant.Persistence.Repositories.Base
             return list;
         }
         
-        public async Task<(IList<T> Items, int TotalCount)> GetPagedListAsync(
+        public virtual async Task<(IList<T> Items, int TotalCount)> GetPagedListAsync(
             Guid userId,
             Expression<Func<T, bool>> filter,
             int pageNumber,
@@ -57,12 +58,21 @@ namespace MyAssistant.Persistence.Repositories.Base
 
             int totalCount = await query.CountAsync();
 
+            var items = await query.Skip((pageNumber - 1) * pageSize).Take(pageSize).ToListAsync();
+
             if (typeof(AuditableEntity).IsAssignableFrom(typeof(T)))
             {
-                query = query.OrderByDescending(x => (x as AuditableEntity)!.AuditLogs.AsQueryable().Max(l => l.DateTime));
+                foreach (var item in items)
+                    await IncludeAuditLogAsync((item as AuditableEntity)!);
+
+                query = query.OrderByDescending(x => (x as AuditableEntity)!.AuditLogs.AsEnumerable().Max(l => l.DateTime));
             }
 
-            var items = await query.Skip((pageNumber - 1) * pageSize).Take(pageSize).ToListAsync();
+            if (typeof(IShareable<T>).IsAssignableFrom(typeof(T)))
+            {
+                foreach (var item in items)
+                    await IncludeSharesAsync((item as IShareable<T>)!);
+            }
 
             return (items, totalCount);
         }

@@ -12,7 +12,7 @@ using MyAssistant.Persistence;
 namespace MyAssistant.Persistence.Migrations
 {
     [DbContext(typeof(MyAssistantDbContext))]
-    [Migration("20250702230859_initial")]
+    [Migration("20250716191951_initial")]
     partial class initial
     {
         /// <inheritdoc />
@@ -34,6 +34,9 @@ namespace MyAssistant.Persistence.Migrations
                     b.Property<int>("ActionTypeCode")
                         .HasColumnType("int");
 
+                    b.Property<DateTime>("DateTime")
+                        .HasColumnType("datetime2");
+
                     b.Property<Guid>("EntityId")
                         .HasColumnType("uniqueidentifier");
 
@@ -44,6 +47,9 @@ namespace MyAssistant.Persistence.Migrations
 
                     b.Property<DateTime>("EventDate")
                         .HasColumnType("datetime2");
+
+                    b.Property<int>("MyAssistantServiceTypeCode")
+                        .HasColumnType("int");
 
                     b.Property<Guid?>("ShoppingListId")
                         .HasColumnType("uniqueidentifier");
@@ -81,7 +87,7 @@ namespace MyAssistant.Persistence.Migrations
                     b.Property<Guid?>("HabitId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<bool>("IsActive")
+                    b.Property<bool>("NotifyUserOnChange")
                         .HasColumnType("bit");
 
                     b.Property<int>("PermissionTypeCode")
@@ -119,7 +125,7 @@ namespace MyAssistant.Persistence.Migrations
                     b.HasIndex("EntityId", "EntityType", "SharedWithUserId")
                         .IsUnique();
 
-                    b.ToTable("entityShare");
+                    b.ToTable("EntityShare");
                 });
 
             modelBuilder.Entity("MyAssistant.Domain.Base.HistoryEntry", b =>
@@ -154,6 +160,71 @@ namespace MyAssistant.Persistence.Migrations
                     b.ToTable("HistoryEntries");
                 });
 
+            modelBuilder.Entity("MyAssistant.Domain.Base.MyAssistantServiceLog", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime?>("EndTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("MyAssistantServiceTypeCode")
+                        .HasColumnType("int");
+
+                    b.Property<string>("ResultDescription")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("StartTime")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("MyAssistantServiceTypeCode");
+
+                    b.ToTable("MyAssistantServiceLog");
+                });
+
+            modelBuilder.Entity("MyAssistant.Domain.Lookups.ActivityType", b =>
+                {
+                    b.Property<int>("Code")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Code"));
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.HasKey("Code");
+
+                    b.ToTable("ActivityType");
+
+                    b.HasData(
+                        new
+                        {
+                            Code = 1,
+                            Description = "Active"
+                        },
+                        new
+                        {
+                            Code = 2,
+                            Description = "Inactive"
+                        },
+                        new
+                        {
+                            Code = 3,
+                            Description = "Urgent"
+                        },
+                        new
+                        {
+                            Code = 4,
+                            Description = "NotUrgent"
+                        });
+                });
+
             modelBuilder.Entity("MyAssistant.Domain.Lookups.AuditActionType", b =>
                 {
                     b.Property<int>("Code")
@@ -169,7 +240,7 @@ namespace MyAssistant.Persistence.Migrations
 
                     b.HasKey("Code");
 
-                    b.ToTable("AuditActionTypes");
+                    b.ToTable("AuditActionType");
 
                     b.HasData(
                         new
@@ -189,6 +260,24 @@ namespace MyAssistant.Persistence.Migrations
                         });
                 });
 
+            modelBuilder.Entity("MyAssistant.Domain.Lookups.MyAssistantServiceType", b =>
+                {
+                    b.Property<int>("Code")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Code"));
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.HasKey("Code");
+
+                    b.ToTable("ServiceType");
+                });
+
             modelBuilder.Entity("MyAssistant.Domain.Lookups.PermissionType", b =>
                 {
                     b.Property<int>("Code")
@@ -204,7 +293,7 @@ namespace MyAssistant.Persistence.Migrations
 
                     b.HasKey("Code");
 
-                    b.ToTable("PermissionTypes");
+                    b.ToTable("PermissionType");
 
                     b.HasData(
                         new
@@ -239,7 +328,7 @@ namespace MyAssistant.Persistence.Migrations
 
                     b.HasKey("Code");
 
-                    b.ToTable("RecurrenceTypes");
+                    b.ToTable("RecurrenceType");
 
                     b.HasData(
                         new
@@ -271,46 +360,6 @@ namespace MyAssistant.Persistence.Migrations
                         {
                             Code = 6,
                             Description = "Annually"
-                        });
-                });
-
-            modelBuilder.Entity("MyAssistant.Domain.Lookups.ShoppingItemActivityType", b =>
-                {
-                    b.Property<int>("Code")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Code"));
-
-                    b.Property<string>("Description")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
-
-                    b.HasKey("Code");
-
-                    b.ToTable("ShoppingItemActivityTypes");
-
-                    b.HasData(
-                        new
-                        {
-                            Code = 1,
-                            Description = "Active"
-                        },
-                        new
-                        {
-                            Code = 2,
-                            Description = "Inactive"
-                        },
-                        new
-                        {
-                            Code = 3,
-                            Description = "Urgent"
-                        },
-                        new
-                        {
-                            Code = 4,
-                            Description = "NotUrgent"
                         });
                 });
 
@@ -447,17 +496,11 @@ namespace MyAssistant.Persistence.Migrations
                     b.Property<bool>("IsCompleted")
                         .HasColumnType("bit");
 
-                    b.Property<bool>("IsRecurring")
-                        .HasColumnType("bit");
-
                     b.Property<int>("Progress")
                         .HasColumnType("int");
 
-                    b.Property<DateTime?>("RecurrenceEndDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int?>("RecurrenceTypeCode")
-                        .HasColumnType("int");
+                    b.Property<Guid?>("RecurrenceId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<DateTime?>("StartDate")
                         .HasColumnType("datetime2");
@@ -473,6 +516,8 @@ namespace MyAssistant.Persistence.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("GoalId");
+
+                    b.HasIndex("RecurrenceId");
 
                     b.ToTable("Habit");
                 });
@@ -506,6 +551,9 @@ namespace MyAssistant.Persistence.Migrations
                     b.Property<DateTime?>("ReadAt")
                         .HasColumnType("datetime2");
 
+                    b.Property<DateTime>("SentAt")
+                        .HasColumnType("datetime2");
+
                     b.Property<string>("Title")
                         .IsRequired()
                         .HasMaxLength(200)
@@ -519,11 +567,58 @@ namespace MyAssistant.Persistence.Migrations
                     b.ToTable("Notification");
                 });
 
+            modelBuilder.Entity("MyAssistant.Domain.Models.Recurrence", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<int>("DefaultPriority")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Description")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("EndDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("Interval")
+                        .HasColumnType("int");
+
+                    b.Property<int>("LengthInMinutes")
+                        .HasColumnType("int");
+
+                    b.Property<int>("RecurrenceTypeCode")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("StartDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<TimeSpan?>("Time")
+                        .HasColumnType("time");
+
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("RecurrenceTypeCode");
+
+                    b.ToTable("Recurrence");
+                });
+
             modelBuilder.Entity("MyAssistant.Domain.Models.ShoppingList", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateOnly>("CreatedDate")
+                        .HasColumnType("date");
 
                     b.Property<string>("Description")
                         .HasMaxLength(1000)
@@ -551,9 +646,6 @@ namespace MyAssistant.Persistence.Migrations
                     b.Property<bool>("IsActive")
                         .HasColumnType("bit");
 
-                    b.Property<bool>("IsRecurring")
-                        .HasColumnType("bit");
-
                     b.Property<DateTime?>("LastPurchaseDate")
                         .HasColumnType("datetime2");
 
@@ -565,17 +657,17 @@ namespace MyAssistant.Persistence.Migrations
                     b.Property<int>("Quantity")
                         .HasColumnType("int");
 
-                    b.Property<DateTime?>("RecurrenceEndDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int?>("RecurrenceTypeCode")
-                        .HasColumnType("int");
+                    b.Property<Guid?>("RecurrenceId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<Guid>("ShoppingListId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<decimal?>("TotalPrice")
                         .HasColumnType("decimal(18,2)");
+
+                    b.Property<int>("TotalPurchaseCount")
+                        .HasColumnType("int");
 
                     b.Property<decimal?>("UnitPrice")
                         .HasColumnType("decimal(18,2)");
@@ -584,6 +676,8 @@ namespace MyAssistant.Persistence.Migrations
                         .HasColumnType("uniqueidentifier");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("RecurrenceId");
 
                     b.HasIndex("ShoppingListId");
 
@@ -609,17 +703,16 @@ namespace MyAssistant.Persistence.Migrations
                     b.Property<bool>("IsCompleted")
                         .HasColumnType("bit");
 
-                    b.Property<bool>("IsRecurring")
-                        .HasColumnType("bit");
-
-                    b.Property<DateTime?>("RecurrenceEndDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int?>("RecurrenceTypeCode")
-                        .HasMaxLength(100)
+                    b.Property<int>("LengthInMinutes")
                         .HasColumnType("int");
 
-                    b.Property<DateTime?>("Time")
+                    b.Property<int>("Priority")
+                        .HasColumnType("int");
+
+                    b.Property<Guid?>("RecurrenceId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime?>("ScheduledAt")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Title")
@@ -633,6 +726,8 @@ namespace MyAssistant.Persistence.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("GoalId");
+
+                    b.HasIndex("RecurrenceId");
 
                     b.ToTable("TaskItem");
                 });
@@ -720,6 +815,17 @@ namespace MyAssistant.Persistence.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("MyAssistant.Domain.Base.MyAssistantServiceLog", b =>
+                {
+                    b.HasOne("MyAssistant.Domain.Lookups.MyAssistantServiceType", "MyAssistantServiceType")
+                        .WithMany()
+                        .HasForeignKey("MyAssistantServiceTypeCode")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.Navigation("MyAssistantServiceType");
+                });
+
             modelBuilder.Entity("MyAssistant.Domain.Models.BillingInfo", b =>
                 {
                     b.HasOne("MyAssistant.Domain.Models.Goal", null)
@@ -746,16 +852,41 @@ namespace MyAssistant.Persistence.Migrations
                         .HasForeignKey("GoalId")
                         .OnDelete(DeleteBehavior.NoAction);
 
+                    b.HasOne("MyAssistant.Domain.Models.Recurrence", "Recurrence")
+                        .WithMany()
+                        .HasForeignKey("RecurrenceId")
+                        .OnDelete(DeleteBehavior.NoAction);
+
                     b.Navigation("LinkedGoal");
+
+                    b.Navigation("Recurrence");
+                });
+
+            modelBuilder.Entity("MyAssistant.Domain.Models.Recurrence", b =>
+                {
+                    b.HasOne("MyAssistant.Domain.Lookups.RecurrenceType", "RecurrenceType")
+                        .WithMany()
+                        .HasForeignKey("RecurrenceTypeCode")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("RecurrenceType");
                 });
 
             modelBuilder.Entity("MyAssistant.Domain.Models.ShoppingListItem", b =>
                 {
+                    b.HasOne("MyAssistant.Domain.Models.Recurrence", "Recurrence")
+                        .WithMany()
+                        .HasForeignKey("RecurrenceId")
+                        .OnDelete(DeleteBehavior.NoAction);
+
                     b.HasOne("MyAssistant.Domain.Models.ShoppingList", "ShoppingList")
                         .WithMany("Items")
                         .HasForeignKey("ShoppingListId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("Recurrence");
 
                     b.Navigation("ShoppingList");
                 });
@@ -767,7 +898,14 @@ namespace MyAssistant.Persistence.Migrations
                         .HasForeignKey("GoalId")
                         .OnDelete(DeleteBehavior.NoAction);
 
+                    b.HasOne("MyAssistant.Domain.Models.Recurrence", "Recurrence")
+                        .WithMany()
+                        .HasForeignKey("RecurrenceId")
+                        .OnDelete(DeleteBehavior.NoAction);
+
                     b.Navigation("LinkedGoal");
+
+                    b.Navigation("Recurrence");
                 });
 
             modelBuilder.Entity("MyAssistant.Domain.Base.AuditLog", b =>

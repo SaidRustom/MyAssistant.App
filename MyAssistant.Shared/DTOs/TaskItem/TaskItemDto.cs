@@ -1,5 +1,4 @@
 ﻿using MyAssistant.Domain.Base;
-using MyAssistant.Domain.Lookups;
 using MyAssistant.Domain.Models;
 
 namespace MyAssistant.Shared.DTOs
@@ -12,7 +11,7 @@ namespace MyAssistant.Shared.DTOs
         
         public Recurrence? Recurrence { get; set; }
 
-        public PermissionType PermissionType { get; set; } = default!;
+        public LookupDto PermissionType { get; set; }
 
         public  ICollection<EntityShare>? Shares { get; set; } = new List<EntityShare>();
 

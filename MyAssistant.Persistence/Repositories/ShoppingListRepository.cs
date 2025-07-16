@@ -1,3 +1,4 @@
+using System.Linq.Expressions;
 using Microsoft.EntityFrameworkCore;
 using MyAssistant.Core.Contracts.Persistence;
 using MyAssistant.Domain.Base;
@@ -22,5 +23,35 @@ public class ShoppingListRepository(MyAssistantDbContext context) : BaseAsyncRep
             await IncludeAuditLogAsync(item);
         
         return list;
+    }
+
+    public override async Task<(IList<ShoppingList> Items, int TotalCount)> GetPagedListAsync(
+    Guid userId,
+    Expression<Func<ShoppingList, bool>> filter,
+    int pageNumber,
+    int pageSize)
+    {
+        IQueryable<ShoppingList> query = _context.Set<ShoppingList>().Where(x => x.UserId == userId);
+
+        if (filter != null)
+            query = query.Where(filter);
+
+        int totalCount = await query.CountAsync();
+
+        query = query.Include(x => x.Items);
+
+        var lists = await query.Skip((pageNumber - 1) * pageSize).Take(pageSize).ToListAsync();
+
+        foreach(var list in lists)
+        {
+            await IncludeSharesAsync(list);
+
+            foreach (var item in list.Items)
+            {
+                await IncludeAuditLogAsync(item);
+            }
+        }
+
+        return (lists, totalCount);
     }
 }

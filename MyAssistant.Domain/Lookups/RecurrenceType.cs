@@ -1,7 +1,9 @@
-﻿using MyAssistant.Domain.Base;
+﻿using System.ComponentModel.DataAnnotations.Schema;
+using MyAssistant.Domain.Base;
 
 namespace MyAssistant.Domain.Lookups
 {
+    [Table("RecurrenceType")]
     public class RecurrenceType : LookupBase<RecurrenceType>
     {
         public static readonly int None = 1;
