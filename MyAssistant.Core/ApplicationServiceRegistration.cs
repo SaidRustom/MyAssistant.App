@@ -4,8 +4,10 @@ using MediatR;
 using Microsoft.Extensions.DependencyInjection;
 using MyAssistant.Core.Features.Base.Create;
 using MyAssistant.Core.Features.Base.Get;
+using MyAssistant.Core.Features.Base.GetList;
 using MyAssistant.Core.Features.Base.Update;
 using MyAssistant.Core.Profiles;
+using MyAssistant.Core.Responses;
 using MyAssistant.Domain.Interfaces;
 using MyAssistant.Shared;
 
@@ -55,6 +57,12 @@ namespace MyAssistant.Core
                     var getEntityByIdHandlerType = typeof(GetEntityByIdQueryHandler<,>).MakeGenericType(entityType, dtoType);
                     var getEntityByIdServiceType = typeof(IRequestHandler<,>).MakeGenericType(getEntityByIdRequestType, dtoType);
                     services.AddScoped(getEntityByIdServiceType, getEntityByIdHandlerType);
+
+                    var getEntityListRequestType = typeof(GetEntityListQuery<,>).MakeGenericType(entityType, dtoType);
+                    var getEntityListHandlerType = typeof(GetEntityListQueryHandler<,>).MakeGenericType(entityType, dtoType);
+                    var pagedResultType = typeof(PaginatedList<>).MakeGenericType(dtoType);
+                    var getEntityListServiceType = typeof(IRequestHandler<,>).MakeGenericType(getEntityListRequestType, pagedResultType);
+                    services.AddScoped(getEntityListServiceType, getEntityListHandlerType);
                 }
                 var createEntityRequestType = typeof(CreateEntityCommand<>).MakeGenericType(entityType);
                 var createEntityHandlerType = typeof(CreateEntityCommandHandler<>).MakeGenericType(entityType);

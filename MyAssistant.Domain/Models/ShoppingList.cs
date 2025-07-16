@@ -2,6 +2,7 @@
 using System.ComponentModel.DataAnnotations.Schema;
 using MyAssistant.Domain.Base;
 using MyAssistant.Domain.Interfaces;
+using MyAssistant.Domain.Lookups;
 
 namespace MyAssistant.Domain.Models
 {
@@ -19,6 +20,11 @@ namespace MyAssistant.Domain.Models
         public string? Description { get; set; }
 
         public DateOnly CreatedDate { get; set; } = DateOnly.FromDateTime(DateTime.Now);
+
+        [Required, Range(1, 15)]
+        public int ShoppingListTypeCode { get; set; }
+
+        public virtual ShoppingListType ShoppingListType { get; set; } = new();
 
         public virtual ICollection<ShoppingListItem> Items { get; set; } = new List<ShoppingListItem>();
 

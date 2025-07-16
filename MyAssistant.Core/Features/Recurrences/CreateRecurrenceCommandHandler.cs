@@ -61,7 +61,7 @@ namespace MyAssistant.Core.Features.Recurrences
             var addedTaskCount = await _taskRepo.AddRangeAsync(tasks);
 
             CreateNotificationCommand cmd = new(recurrence, recurrence.UserId,
-                "Recurrences added successfully", $"{addedTaskCount} Occurrences added for {recurrence.Title}");
+                "Recurrences added successfully. ", $"{addedTaskCount} Occurrences added for {recurrence.Title}");
 
             await _mediator.Send(cmd);
 

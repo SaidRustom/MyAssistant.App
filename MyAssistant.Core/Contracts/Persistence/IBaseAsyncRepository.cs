@@ -1,4 +1,5 @@
-﻿using MyAssistant.Domain.Interfaces;
+﻿using System.Linq.Expressions;
+using MyAssistant.Domain.Interfaces;
 using MyAssistant.Domain.Lookups;
 
 namespace MyAssistant.Core.Contracts.Persistence
@@ -6,7 +7,7 @@ namespace MyAssistant.Core.Contracts.Persistence
     public interface IBaseAsyncRepository<T> where T : IEntityBase
     {
         Task<T> GetByIdAsync(Guid id);
-        Task<List<T>> GetAllAsync(Guid userId);
+        Task<List<T>> GetAllAsync(Guid userId);        
         Task<T> AddAsync(T entity);
         Task<int> AddRangeAsync (ICollection<T> entityList);
         Task UpdateRangeAsync(ICollection<T> entityList);
@@ -17,5 +18,10 @@ namespace MyAssistant.Core.Contracts.Persistence
         Task<bool> ValidateCanGetAsync(Guid entityId, Guid userId);
         Task<bool> ValidateCanEditAsync(Guid entityId, Guid userId);
         Task<PermissionType> GetUserPermissionTypeAsync(Guid entityId, Guid userId);
+        Task<(IList<T> Items, int TotalCount)> GetPagedListAsync(
+            Guid userId,
+            Expression<Func<T, bool>> filter,
+            int pageNumber,
+            int pageSize);
     }
 }

@@ -8,6 +8,9 @@ using MyAssistant.Domain.Interfaces;
 using MyAssistant.Core.Features.Base.Create;
 using MyAssistant.Core.Features.Base.Update;
 using MyAssistant.Core.Features.Base.Get;
+using MyAssistant.Core.Features.Base.GetList;
+using MyAssistant.Persistence.Repositories.Base;
+using MyAssistant.Core.Contracts.Persistence;
 
 namespace MyAssistant.API.Controllers
 {
@@ -97,6 +100,19 @@ namespace MyAssistant.API.Controllers
 
             return await ExecuteAsync<IRequest<TResponse>, TResponse>(
                 query, result => Ok(new ApiResponse<TResponse>(result)));
+        }
+        
+        [HttpGet]
+        public async Task<IActionResult> GetListAsync<TEntity, TResponse>(int pageNumber = 1, int pageSize = 20)
+            where TEntity : class, IEntityBase
+            where TResponse : IDto<TEntity>
+        {
+            var query = new GetEntityListQuery<TEntity, TResponse>(pageNumber, pageSize);
+
+            return await ExecuteAsync<GetEntityListQuery<TEntity, TResponse>, PaginatedList<TResponse>>(
+                query,
+                result => Ok(new ApiResponse<PaginatedList<TResponse>>(result))
+            );
         }
 
         /// <summary>

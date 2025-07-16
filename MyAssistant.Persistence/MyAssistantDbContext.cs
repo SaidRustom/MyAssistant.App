@@ -36,7 +36,7 @@ namespace MyAssistant.Persistence
         public DbSet<AuditActionType> AuditActionTypes { get; set; } = default!;
         public DbSet<PermissionType> PermissionTypes { get; set; } = default!;
         public DbSet<RecurrenceType> RecurrenceTypes { get; set; } = default!;
-        public DbSet<ShoppingItemActivityType> ShoppingItemActivityTypes { get; set; } = default!;
+        public DbSet<ActivityType> ShoppingItemActivityTypes { get; set; } = default!;
 
         /// <summary>
         /// Log created/updated date 
@@ -101,6 +101,7 @@ namespace MyAssistant.Persistence
                     {
                         await AuditLogs.AddAsync(auditLog, cancellationToken);
                         await HistoryEntries.AddRangeAsync(changes);
+                        //TODO: Add notification handling here
                     }
                 }
                 //TODO: Handle delete
@@ -206,11 +207,30 @@ namespace MyAssistant.Persistence
             modelBuilder.Entity<PermissionType>().HasData(new PermissionType { Code = 2, Description = "Read/Write" });
             modelBuilder.Entity<PermissionType>().HasData(new PermissionType { Code = 3, Description = "Read/Write/Delete" });
 
-            //Shopping Item Activity Type
-            modelBuilder.Entity<ShoppingItemActivityType>().HasData(new ShoppingItemActivityType { Code = 1, Description = "Active"});
-            modelBuilder.Entity<ShoppingItemActivityType>().HasData(new ShoppingItemActivityType { Code = 2, Description = "Inactive" });
-            modelBuilder.Entity<ShoppingItemActivityType>().HasData(new ShoppingItemActivityType { Code = 3, Description = "Urgent" });
-            modelBuilder.Entity<ShoppingItemActivityType>().HasData(new ShoppingItemActivityType { Code = 4, Description = "NotUrgent" });
+            //Activity Type
+            modelBuilder.Entity<ActivityType>().HasData(new ActivityType { Code = 1, Description = "Active"});
+            modelBuilder.Entity<ActivityType>().HasData(new ActivityType { Code = 2, Description = "Inactive" });
+            modelBuilder.Entity<ActivityType>().HasData(new ActivityType { Code = 3, Description = "Urgent" });
+            modelBuilder.Entity<ActivityType>().HasData(new ActivityType { Code = 4, Description = "NotUrgent" });
+
+            //Shopping List Type
+            modelBuilder.Entity<ShoppingListType>().HasData(
+                new ShoppingListType { Code = 1, Description = "Groceries" },
+                new ShoppingListType { Code = 2, Description = "Pharmaceuticals" },
+                new ShoppingListType { Code = 3, Description = "Electronics" },
+                new ShoppingListType { Code = 4, Description = "Clothing" },
+                new ShoppingListType { Code = 5, Description = "HomeGoods" },
+                new ShoppingListType { Code = 6, Description = "Beauty" },
+                new ShoppingListType { Code = 7, Description = "Toys" },
+                new ShoppingListType { Code = 8, Description = "Books" },
+                new ShoppingListType { Code = 9, Description = "Office Supplies" },
+                new ShoppingListType { Code = 10, Description = "Sports Equipment" },
+                new ShoppingListType { Code = 11, Description = "Automotive" },
+                new ShoppingListType { Code = 12, Description = "Pet Supplies" },
+                new ShoppingListType { Code = 13, Description = "Garden" },
+                new ShoppingListType { Code = 14, Description = "Baby Products" },
+                new ShoppingListType { Code = 15, Description = "Furniture" }
+                );
 
             //modelBuilder.Entity<MyAssistantServiceType>().HasData(new MyAssistantServiceType { Code = 1, Description = "" });
 

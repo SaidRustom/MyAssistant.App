@@ -12,8 +12,9 @@ namespace MyAssistant.Persistence.Configurations
                 .IsRequired()
                 .HasMaxLength(200);
 
-            builder.HasOne(x => x.Recurrence)
+            builder.HasOne(x => x.RecurrenceType)
                 .WithMany()
+                .HasForeignKey(x => x.RecurrenceTypeCode)
                 .OnDelete(DeleteBehavior.NoAction);
 
             builder.Property(x => x.UnitPrice)

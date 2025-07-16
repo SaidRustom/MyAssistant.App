@@ -14,7 +14,7 @@ namespace MyAssistant.Persistence.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
-                name: "AuditActionTypes",
+                name: "ActivityType",
                 columns: table => new
                 {
                     Code = table.Column<int>(type: "int", nullable: false)
@@ -23,7 +23,20 @@ namespace MyAssistant.Persistence.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_AuditActionTypes", x => x.Code);
+                    table.PrimaryKey("PK_ActivityType", x => x.Code);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "AuditActionType",
+                columns: table => new
+                {
+                    Code = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Description = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_AuditActionType", x => x.Code);
                 });
 
             migrationBuilder.CreateTable(
@@ -69,6 +82,7 @@ namespace MyAssistant.Persistence.Migrations
                     Title = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: false),
                     Message = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: true),
                     IsRead = table.Column<bool>(type: "bit", nullable: false),
+                    SentAt = table.Column<DateTime>(type: "datetime2", nullable: false),
                     ReadAt = table.Column<DateTime>(type: "datetime2", nullable: true),
                     ActionUrl = table.Column<string>(type: "nvarchar(400)", maxLength: 400, nullable: true),
                     EmailNotification = table.Column<bool>(type: "bit", nullable: false),
@@ -82,7 +96,7 @@ namespace MyAssistant.Persistence.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "PermissionTypes",
+                name: "PermissionType",
                 columns: table => new
                 {
                     Code = table.Column<int>(type: "int", nullable: false)
@@ -91,11 +105,11 @@ namespace MyAssistant.Persistence.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_PermissionTypes", x => x.Code);
+                    table.PrimaryKey("PK_PermissionType", x => x.Code);
                 });
 
             migrationBuilder.CreateTable(
-                name: "RecurrenceTypes",
+                name: "RecurrenceType",
                 columns: table => new
                 {
                     Code = table.Column<int>(type: "int", nullable: false)
@@ -104,11 +118,11 @@ namespace MyAssistant.Persistence.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_RecurrenceTypes", x => x.Code);
+                    table.PrimaryKey("PK_RecurrenceType", x => x.Code);
                 });
 
             migrationBuilder.CreateTable(
-                name: "ShoppingItemActivityTypes",
+                name: "ServiceType",
                 columns: table => new
                 {
                     Code = table.Column<int>(type: "int", nullable: false)
@@ -117,7 +131,7 @@ namespace MyAssistant.Persistence.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_ShoppingItemActivityTypes", x => x.Code);
+                    table.PrimaryKey("PK_ServiceType", x => x.Code);
                 });
 
             migrationBuilder.CreateTable(
@@ -127,6 +141,7 @@ namespace MyAssistant.Persistence.Migrations
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     Name = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: false),
                     Description = table.Column<string>(type: "nvarchar(1000)", maxLength: 1000, nullable: true),
+                    CreatedDate = table.Column<DateOnly>(type: "date", nullable: false),
                     UserId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
                 },
                 constraints: table =>
@@ -151,56 +166,50 @@ namespace MyAssistant.Persistence.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Habit",
+                name: "Recurrence",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    Title = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: false),
-                    Description = table.Column<string>(type: "nvarchar(1000)", maxLength: 1000, nullable: true),
-                    GoalValue = table.Column<int>(type: "int", nullable: false),
-                    Progress = table.Column<int>(type: "int", nullable: false),
-                    StartDate = table.Column<DateTime>(type: "datetime2", nullable: true),
-                    IsCompleted = table.Column<bool>(type: "bit", nullable: false),
-                    IsRecurring = table.Column<bool>(type: "bit", nullable: false),
-                    RecurrenceTypeCode = table.Column<int>(type: "int", nullable: true),
-                    RecurrenceEndDate = table.Column<DateTime>(type: "datetime2", nullable: true),
-                    GoalId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    Title = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Description = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Interval = table.Column<int>(type: "int", nullable: false),
+                    RecurrenceTypeCode = table.Column<int>(type: "int", nullable: false),
+                    DefaultPriority = table.Column<int>(type: "int", nullable: false),
+                    Time = table.Column<TimeSpan>(type: "time", nullable: true),
+                    LengthInMinutes = table.Column<int>(type: "int", nullable: false),
+                    StartDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    EndDate = table.Column<DateTime>(type: "datetime2", nullable: true),
                     UserId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Habit", x => x.Id);
+                    table.PrimaryKey("PK_Recurrence", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Habit_Goal_GoalId",
-                        column: x => x.GoalId,
-                        principalTable: "Goal",
-                        principalColumn: "Id");
+                        name: "FK_Recurrence_RecurrenceType_RecurrenceTypeCode",
+                        column: x => x.RecurrenceTypeCode,
+                        principalTable: "RecurrenceType",
+                        principalColumn: "Code",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
-                name: "TaskItem",
+                name: "MyAssistantServiceLog",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    Title = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: false),
-                    Description = table.Column<string>(type: "nvarchar(1000)", maxLength: 1000, nullable: true),
-                    Time = table.Column<DateTime>(type: "datetime2", nullable: true),
-                    DueDate = table.Column<DateTime>(type: "datetime2", nullable: true),
-                    IsCompleted = table.Column<bool>(type: "bit", nullable: false),
-                    IsRecurring = table.Column<bool>(type: "bit", nullable: false),
-                    RecurrenceTypeCode = table.Column<int>(type: "int", maxLength: 100, nullable: true),
-                    RecurrenceEndDate = table.Column<DateTime>(type: "datetime2", nullable: true),
-                    GoalId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
-                    UserId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
+                    ResultDescription = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    MyAssistantServiceTypeCode = table.Column<int>(type: "int", nullable: false),
+                    StartTime = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    EndTime = table.Column<DateTime>(type: "datetime2", nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_TaskItem", x => x.Id);
+                    table.PrimaryKey("PK_MyAssistantServiceLog", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_TaskItem_Goal_GoalId",
-                        column: x => x.GoalId,
-                        principalTable: "Goal",
-                        principalColumn: "Id");
+                        name: "FK_MyAssistantServiceLog_ServiceType_MyAssistantServiceTypeCode",
+                        column: x => x.MyAssistantServiceTypeCode,
+                        principalTable: "ServiceType",
+                        principalColumn: "Code");
                 });
 
             migrationBuilder.CreateTable(
@@ -212,6 +221,8 @@ namespace MyAssistant.Persistence.Migrations
                     EntityType = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
                     EventDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     ActionTypeCode = table.Column<int>(type: "int", nullable: false),
+                    MyAssistantServiceTypeCode = table.Column<int>(type: "int", nullable: false),
+                    DateTime = table.Column<DateTime>(type: "datetime2", nullable: false),
                     ShoppingListId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
                     UserId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
                 },
@@ -226,6 +237,36 @@ namespace MyAssistant.Persistence.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Habit",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Title = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: false),
+                    Description = table.Column<string>(type: "nvarchar(1000)", maxLength: 1000, nullable: true),
+                    GoalValue = table.Column<int>(type: "int", nullable: false),
+                    Progress = table.Column<int>(type: "int", nullable: false),
+                    StartDate = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    IsCompleted = table.Column<bool>(type: "bit", nullable: false),
+                    RecurrenceId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    GoalId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    UserId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Habit", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Habit_Goal_GoalId",
+                        column: x => x.GoalId,
+                        principalTable: "Goal",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_Habit_Recurrence_RecurrenceId",
+                        column: x => x.RecurrenceId,
+                        principalTable: "Recurrence",
+                        principalColumn: "Id");
+                });
+
+            migrationBuilder.CreateTable(
                 name: "ShoppingListItem",
                 columns: table => new
                 {
@@ -233,12 +274,11 @@ namespace MyAssistant.Persistence.Migrations
                     Name = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: false),
                     Quantity = table.Column<int>(type: "int", nullable: false),
                     IsActive = table.Column<bool>(type: "bit", nullable: false),
+                    TotalPurchaseCount = table.Column<int>(type: "int", nullable: false),
                     UnitPrice = table.Column<decimal>(type: "decimal(18,2)", nullable: true),
                     TotalPrice = table.Column<decimal>(type: "decimal(18,2)", nullable: true),
                     LastPurchaseDate = table.Column<DateTime>(type: "datetime2", nullable: true),
-                    IsRecurring = table.Column<bool>(type: "bit", nullable: false),
-                    RecurrenceTypeCode = table.Column<int>(type: "int", nullable: true),
-                    RecurrenceEndDate = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    RecurrenceId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
                     ShoppingListId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     UserId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
                 },
@@ -246,9 +286,67 @@ namespace MyAssistant.Persistence.Migrations
                 {
                     table.PrimaryKey("PK_ShoppingListItem", x => x.Id);
                     table.ForeignKey(
+                        name: "FK_ShoppingListItem_Recurrence_RecurrenceId",
+                        column: x => x.RecurrenceId,
+                        principalTable: "Recurrence",
+                        principalColumn: "Id");
+                    table.ForeignKey(
                         name: "FK_ShoppingListItem_ShoppingList_ShoppingListId",
                         column: x => x.ShoppingListId,
                         principalTable: "ShoppingList",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "TaskItem",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Title = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: false),
+                    Description = table.Column<string>(type: "nvarchar(1000)", maxLength: 1000, nullable: true),
+                    ScheduledAt = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    DueDate = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    LengthInMinutes = table.Column<int>(type: "int", nullable: false),
+                    IsCompleted = table.Column<bool>(type: "bit", nullable: false),
+                    Priority = table.Column<int>(type: "int", nullable: false),
+                    RecurrenceId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    GoalId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    UserId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_TaskItem", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_TaskItem_Goal_GoalId",
+                        column: x => x.GoalId,
+                        principalTable: "Goal",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_TaskItem_Recurrence_RecurrenceId",
+                        column: x => x.RecurrenceId,
+                        principalTable: "Recurrence",
+                        principalColumn: "Id");
+                });
+
+            migrationBuilder.CreateTable(
+                name: "HistoryEntries",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    AuditLogId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    PropertyName = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: false),
+                    OldValue = table.Column<string>(type: "nvarchar(4000)", maxLength: 4000, nullable: true),
+                    NewValue = table.Column<string>(type: "nvarchar(4000)", maxLength: 4000, nullable: true),
+                    UserId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_HistoryEntries", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_HistoryEntries_AuditLogs_AuditLogId",
+                        column: x => x.AuditLogId,
+                        principalTable: "AuditLogs",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -289,29 +387,7 @@ namespace MyAssistant.Persistence.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "HistoryEntries",
-                columns: table => new
-                {
-                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    AuditLogId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    PropertyName = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: false),
-                    OldValue = table.Column<string>(type: "nvarchar(4000)", maxLength: 4000, nullable: true),
-                    NewValue = table.Column<string>(type: "nvarchar(4000)", maxLength: 4000, nullable: true),
-                    UserId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_HistoryEntries", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_HistoryEntries_AuditLogs_AuditLogId",
-                        column: x => x.AuditLogId,
-                        principalTable: "AuditLogs",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "entityShare",
+                name: "EntityShare",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
@@ -319,7 +395,7 @@ namespace MyAssistant.Persistence.Migrations
                     EntityType = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
                     SharedWithUserId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     PermissionTypeCode = table.Column<int>(type: "int", nullable: false),
-                    IsActive = table.Column<bool>(type: "bit", nullable: false),
+                    NotifyUserOnChange = table.Column<bool>(type: "bit", nullable: false),
                     SharedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
                     BillingInfoId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
                     GoalId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
@@ -330,43 +406,54 @@ namespace MyAssistant.Persistence.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_entityShare", x => x.Id);
+                    table.PrimaryKey("PK_EntityShare", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_entityShare_BillingInfo_BillingInfoId",
+                        name: "FK_EntityShare_BillingInfo_BillingInfoId",
                         column: x => x.BillingInfoId,
                         principalTable: "BillingInfo",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_entityShare_Goal_GoalId",
+                        name: "FK_EntityShare_Goal_GoalId",
                         column: x => x.GoalId,
                         principalTable: "Goal",
                         principalColumn: "Id");
                     table.ForeignKey(
-                        name: "FK_entityShare_Habit_HabitId",
+                        name: "FK_EntityShare_Habit_HabitId",
                         column: x => x.HabitId,
                         principalTable: "Habit",
                         principalColumn: "Id");
                     table.ForeignKey(
-                        name: "FK_entityShare_PermissionTypes_PermissionTypeCode",
+                        name: "FK_EntityShare_PermissionType_PermissionTypeCode",
                         column: x => x.PermissionTypeCode,
-                        principalTable: "PermissionTypes",
+                        principalTable: "PermissionType",
                         principalColumn: "Code",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_entityShare_ShoppingList_ShoppingListId",
+                        name: "FK_EntityShare_ShoppingList_ShoppingListId",
                         column: x => x.ShoppingListId,
                         principalTable: "ShoppingList",
                         principalColumn: "Id");
                     table.ForeignKey(
-                        name: "FK_entityShare_TaskItem_TaskItemId",
+                        name: "FK_EntityShare_TaskItem_TaskItemId",
                         column: x => x.TaskItemId,
                         principalTable: "TaskItem",
                         principalColumn: "Id");
                 });
 
             migrationBuilder.InsertData(
-                table: "AuditActionTypes",
+                table: "ActivityType",
+                columns: new[] { "Code", "Description" },
+                values: new object[,]
+                {
+                    { 1, "Active" },
+                    { 2, "Inactive" },
+                    { 3, "Urgent" },
+                    { 4, "NotUrgent" }
+                });
+
+            migrationBuilder.InsertData(
+                table: "AuditActionType",
                 columns: new[] { "Code", "Description" },
                 values: new object[,]
                 {
@@ -376,7 +463,7 @@ namespace MyAssistant.Persistence.Migrations
                 });
 
             migrationBuilder.InsertData(
-                table: "PermissionTypes",
+                table: "PermissionType",
                 columns: new[] { "Code", "Description" },
                 values: new object[,]
                 {
@@ -386,7 +473,7 @@ namespace MyAssistant.Persistence.Migrations
                 });
 
             migrationBuilder.InsertData(
-                table: "RecurrenceTypes",
+                table: "RecurrenceType",
                 columns: new[] { "Code", "Description" },
                 values: new object[,]
                 {
@@ -396,17 +483,6 @@ namespace MyAssistant.Persistence.Migrations
                     { 4, "Weekly" },
                     { 5, "Monthly" },
                     { 6, "Annually" }
-                });
-
-            migrationBuilder.InsertData(
-                table: "ShoppingItemActivityTypes",
-                columns: new[] { "Code", "Description" },
-                values: new object[,]
-                {
-                    { 1, "Active" },
-                    { 2, "Inactive" },
-                    { 3, "Urgent" },
-                    { 4, "NotUrgent" }
                 });
 
             migrationBuilder.CreateIndex(
@@ -435,39 +511,39 @@ namespace MyAssistant.Persistence.Migrations
                 columns: new[] { "UserId", "ReceiverUserId", "SentAt" });
 
             migrationBuilder.CreateIndex(
-                name: "IX_entityShare_BillingInfoId",
-                table: "entityShare",
+                name: "IX_EntityShare_BillingInfoId",
+                table: "EntityShare",
                 column: "BillingInfoId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_entityShare_EntityId_EntityType_SharedWithUserId",
-                table: "entityShare",
+                name: "IX_EntityShare_EntityId_EntityType_SharedWithUserId",
+                table: "EntityShare",
                 columns: new[] { "EntityId", "EntityType", "SharedWithUserId" },
                 unique: true);
 
             migrationBuilder.CreateIndex(
-                name: "IX_entityShare_GoalId",
-                table: "entityShare",
+                name: "IX_EntityShare_GoalId",
+                table: "EntityShare",
                 column: "GoalId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_entityShare_HabitId",
-                table: "entityShare",
+                name: "IX_EntityShare_HabitId",
+                table: "EntityShare",
                 column: "HabitId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_entityShare_PermissionTypeCode",
-                table: "entityShare",
+                name: "IX_EntityShare_PermissionTypeCode",
+                table: "EntityShare",
                 column: "PermissionTypeCode");
 
             migrationBuilder.CreateIndex(
-                name: "IX_entityShare_ShoppingListId",
-                table: "entityShare",
+                name: "IX_EntityShare_ShoppingListId",
+                table: "EntityShare",
                 column: "ShoppingListId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_entityShare_TaskItemId",
-                table: "entityShare",
+                name: "IX_EntityShare_TaskItemId",
+                table: "EntityShare",
                 column: "TaskItemId");
 
             migrationBuilder.CreateIndex(
@@ -476,9 +552,29 @@ namespace MyAssistant.Persistence.Migrations
                 column: "GoalId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Habit_RecurrenceId",
+                table: "Habit",
+                column: "RecurrenceId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_HistoryEntries_AuditLogId",
                 table: "HistoryEntries",
                 column: "AuditLogId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_MyAssistantServiceLog_MyAssistantServiceTypeCode",
+                table: "MyAssistantServiceLog",
+                column: "MyAssistantServiceTypeCode");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Recurrence_RecurrenceTypeCode",
+                table: "Recurrence",
+                column: "RecurrenceTypeCode");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ShoppingListItem_RecurrenceId",
+                table: "ShoppingListItem",
+                column: "RecurrenceId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_ShoppingListItem_ShoppingListId",
@@ -491,6 +587,11 @@ namespace MyAssistant.Persistence.Migrations
                 column: "GoalId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_TaskItem_RecurrenceId",
+                table: "TaskItem",
+                column: "RecurrenceId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_UserConnection_UserId_FriendUserId",
                 table: "UserConnection",
                 columns: new[] { "UserId", "FriendUserId" },
@@ -501,25 +602,25 @@ namespace MyAssistant.Persistence.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "AuditActionTypes");
+                name: "ActivityType");
+
+            migrationBuilder.DropTable(
+                name: "AuditActionType");
 
             migrationBuilder.DropTable(
                 name: "ChatMessage");
 
             migrationBuilder.DropTable(
-                name: "entityShare");
+                name: "EntityShare");
 
             migrationBuilder.DropTable(
                 name: "HistoryEntries");
 
             migrationBuilder.DropTable(
+                name: "MyAssistantServiceLog");
+
+            migrationBuilder.DropTable(
                 name: "Notification");
-
-            migrationBuilder.DropTable(
-                name: "RecurrenceTypes");
-
-            migrationBuilder.DropTable(
-                name: "ShoppingItemActivityTypes");
 
             migrationBuilder.DropTable(
                 name: "ShoppingListItem");
@@ -531,13 +632,16 @@ namespace MyAssistant.Persistence.Migrations
                 name: "BillingInfo");
 
             migrationBuilder.DropTable(
-                name: "PermissionTypes");
+                name: "PermissionType");
 
             migrationBuilder.DropTable(
                 name: "TaskItem");
 
             migrationBuilder.DropTable(
                 name: "AuditLogs");
+
+            migrationBuilder.DropTable(
+                name: "ServiceType");
 
             migrationBuilder.DropTable(
                 name: "Habit");
@@ -547,6 +651,12 @@ namespace MyAssistant.Persistence.Migrations
 
             migrationBuilder.DropTable(
                 name: "Goal");
+
+            migrationBuilder.DropTable(
+                name: "Recurrence");
+
+            migrationBuilder.DropTable(
+                name: "RecurrenceType");
         }
     }
 }

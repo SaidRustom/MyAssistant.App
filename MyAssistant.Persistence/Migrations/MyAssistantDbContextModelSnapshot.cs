@@ -31,6 +31,9 @@ namespace MyAssistant.Persistence.Migrations
                     b.Property<int>("ActionTypeCode")
                         .HasColumnType("int");
 
+                    b.Property<DateTime>("DateTime")
+                        .HasColumnType("datetime2");
+
                     b.Property<Guid>("EntityId")
                         .HasColumnType("uniqueidentifier");
 
@@ -179,6 +182,46 @@ namespace MyAssistant.Persistence.Migrations
                     b.ToTable("MyAssistantServiceLog");
                 });
 
+            modelBuilder.Entity("MyAssistant.Domain.Lookups.ActivityType", b =>
+                {
+                    b.Property<int>("Code")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Code"));
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.HasKey("Code");
+
+                    b.ToTable("ActivityType");
+
+                    b.HasData(
+                        new
+                        {
+                            Code = 1,
+                            Description = "Active"
+                        },
+                        new
+                        {
+                            Code = 2,
+                            Description = "Inactive"
+                        },
+                        new
+                        {
+                            Code = 3,
+                            Description = "Urgent"
+                        },
+                        new
+                        {
+                            Code = 4,
+                            Description = "NotUrgent"
+                        });
+                });
+
             modelBuilder.Entity("MyAssistant.Domain.Lookups.AuditActionType", b =>
                 {
                     b.Property<int>("Code")
@@ -194,7 +237,7 @@ namespace MyAssistant.Persistence.Migrations
 
                     b.HasKey("Code");
 
-                    b.ToTable("AuditActionTypes");
+                    b.ToTable("AuditActionType");
 
                     b.HasData(
                         new
@@ -229,7 +272,7 @@ namespace MyAssistant.Persistence.Migrations
 
                     b.HasKey("Code");
 
-                    b.ToTable("MyAssistantServiceType");
+                    b.ToTable("ServiceType");
                 });
 
             modelBuilder.Entity("MyAssistant.Domain.Lookups.PermissionType", b =>
@@ -247,7 +290,7 @@ namespace MyAssistant.Persistence.Migrations
 
                     b.HasKey("Code");
 
-                    b.ToTable("PermissionTypes");
+                    b.ToTable("PermissionType");
 
                     b.HasData(
                         new
@@ -282,7 +325,7 @@ namespace MyAssistant.Persistence.Migrations
 
                     b.HasKey("Code");
 
-                    b.ToTable("RecurrenceTypes");
+                    b.ToTable("RecurrenceType");
 
                     b.HasData(
                         new
@@ -317,7 +360,7 @@ namespace MyAssistant.Persistence.Migrations
                         });
                 });
 
-            modelBuilder.Entity("MyAssistant.Domain.Lookups.ShoppingItemActivityType", b =>
+            modelBuilder.Entity("MyAssistant.Domain.Lookups.ShoppingListType", b =>
                 {
                     b.Property<int>("Code")
                         .ValueGeneratedOnAdd()
@@ -332,28 +375,83 @@ namespace MyAssistant.Persistence.Migrations
 
                     b.HasKey("Code");
 
-                    b.ToTable("ShoppingItemActivityTypes");
+                    b.ToTable("ShoppingListType");
 
                     b.HasData(
                         new
                         {
                             Code = 1,
-                            Description = "Active"
+                            Description = "Groceries"
                         },
                         new
                         {
                             Code = 2,
-                            Description = "Inactive"
+                            Description = "Pharmaceuticals"
                         },
                         new
                         {
                             Code = 3,
-                            Description = "Urgent"
+                            Description = "Electronics"
                         },
                         new
                         {
                             Code = 4,
-                            Description = "NotUrgent"
+                            Description = "Clothing"
+                        },
+                        new
+                        {
+                            Code = 5,
+                            Description = "HomeGoods"
+                        },
+                        new
+                        {
+                            Code = 6,
+                            Description = "Beauty"
+                        },
+                        new
+                        {
+                            Code = 7,
+                            Description = "Toys"
+                        },
+                        new
+                        {
+                            Code = 8,
+                            Description = "Books"
+                        },
+                        new
+                        {
+                            Code = 9,
+                            Description = "Office Supplies"
+                        },
+                        new
+                        {
+                            Code = 10,
+                            Description = "Sports Equipment"
+                        },
+                        new
+                        {
+                            Code = 11,
+                            Description = "Automotive"
+                        },
+                        new
+                        {
+                            Code = 12,
+                            Description = "Pet Supplies"
+                        },
+                        new
+                        {
+                            Code = 13,
+                            Description = "Garden"
+                        },
+                        new
+                        {
+                            Code = 14,
+                            Description = "Baby Products"
+                        },
+                        new
+                        {
+                            Code = 15,
+                            Description = "Furniture"
                         });
                 });
 
@@ -623,10 +721,15 @@ namespace MyAssistant.Persistence.Migrations
                         .HasMaxLength(200)
                         .HasColumnType("nvarchar(200)");
 
+                    b.Property<int>("ShoppingListTypeCode")
+                        .HasColumnType("int");
+
                     b.Property<Guid>("UserId")
                         .HasColumnType("uniqueidentifier");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("ShoppingListTypeCode");
 
                     b.ToTable("ShoppingList");
                 });
@@ -865,6 +968,17 @@ namespace MyAssistant.Persistence.Migrations
                         .IsRequired();
 
                     b.Navigation("RecurrenceType");
+                });
+
+            modelBuilder.Entity("MyAssistant.Domain.Models.ShoppingList", b =>
+                {
+                    b.HasOne("MyAssistant.Domain.Lookups.ShoppingListType", "ShoppingListType")
+                        .WithMany()
+                        .HasForeignKey("ShoppingListTypeCode")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("ShoppingListType");
                 });
 
             modelBuilder.Entity("MyAssistant.Domain.Models.ShoppingListItem", b =>

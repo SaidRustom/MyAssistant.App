@@ -1,7 +1,9 @@
-﻿using MyAssistant.Domain.Base;
+﻿using System.ComponentModel.DataAnnotations.Schema;
+using MyAssistant.Domain.Base;
 
 namespace MyAssistant.Domain.Lookups
 {
+    [Table("PermissionType")]
     public class PermissionType : LookupBase<PermissionType>
     {
         public static readonly int Read = 1;

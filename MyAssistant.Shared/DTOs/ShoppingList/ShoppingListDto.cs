@@ -17,7 +17,7 @@ public class ShoppingListDto : CreateOrUpdateShoppingListCommand, IDto<ShoppingL
     //TODO: Look into creating dto for shares..
     public ICollection<EntityShare>? Shares { get; set; } = new List<EntityShare>();
 
-    public PermissionType PermissionType { get; set; }
+    public LookupDto PermissionType { get; set; } 
 
     //TODO: add this once billingDTO is implemented
     //public ICollection<BillingInfo>? Bills { get; set; } 

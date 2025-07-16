@@ -4,7 +4,7 @@ using MyAssistant.Core.Contracts;
 using MyAssistant.Core.Contracts.Persistence;
 using MyAssistant.Shared.DTOs;
 
-namespace MyAssistant.Core.Features.ShoppingLists;
+namespace MyAssistant.Core.Features.ShoppingLists.Get;
 
 public class GetShoppingListQueryHandler : IRequestHandler<GetShoppingListQuery, ShoppingListDto>
 {
@@ -13,7 +13,7 @@ public class GetShoppingListQueryHandler : IRequestHandler<GetShoppingListQuery,
     private readonly IMapper _mapper;
 
     public GetShoppingListQueryHandler(
-        IShoppingListRepository repo, 
+        IShoppingListRepository repo,
         ILoggedInUserService loggedInUserService,
         IMapper mapper)
     {
@@ -30,8 +30,7 @@ public class GetShoppingListQueryHandler : IRequestHandler<GetShoppingListQuery,
 
         var dto = _mapper.Map<ShoppingListDto>(item);
 
-        dto.PermissionType = await _repo.GetUserPermissionTypeAsync(command.Id, _loggedInUserService.UserId);
-        
+        dto.PermissionType = _mapper.Map<LookupDto>(await _repo.GetUserPermissionTypeAsync(command.Id, _loggedInUserService.UserId));
 
         return dto;
     }

@@ -35,10 +35,10 @@ public class UpdateShoppingListItemHandler : IRequestHandler<CreateOrUpdateShopp
         var validator = new ShoppingListItemValidator(_repo, _listRepo, _loggedInUserService);
         await validator.ValidateAndThrowAsync(obj, cancellationToken);
         
-        var old = (await _repo.GetByIdAsync(cmd.Id.Value));
-        await _repo.DetachAsync(old); //we don't want EF to track this..
+        var dbValue = (await _repo.GetByIdAsync(cmd.Id.Value));
+        await _repo.DetachAsync(dbValue); //we don't want EF to track this..
 
-        if (old.IsActive != cmd.IsActive && !cmd.IsActive)
+        if (dbValue != null && dbValue.IsActive != cmd.IsActive && !cmd.IsActive)
         {
             obj.TotalPurchaseCount = obj.TotalPurchaseCount + obj.Quantity;
             obj.Quantity = 0;

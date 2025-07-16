@@ -21,6 +21,13 @@ namespace MyAssistant.API.Controllers
         public async Task<IActionResult> Get(Guid id)
             => await GetAsync<TaskItem, TaskItemDto>(id);
 
+        [HttpGet]
+        [ProducesResponseType(typeof(ApiResponse<PaginatedList<TaskItemDto>>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ApiResponse< PaginatedList<TaskItemDto>>), StatusCodes.Status404NotFound)]
+        [ProducesResponseType(typeof(ApiResponse<PaginatedList<TaskItemDto>>), StatusCodes.Status500InternalServerError)]
+        public async Task<IActionResult> GetList([FromQuery] int pageNumber = 1, [FromQuery] int pageSize = 20)
+            => await GetListAsync<TaskItem, TaskItemDto>(pageNumber, pageSize);
+
         /// <summary>
         /// Creates a new TaskItem.
         /// </summary>
