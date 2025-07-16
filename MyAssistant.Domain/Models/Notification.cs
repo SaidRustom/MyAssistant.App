@@ -9,7 +9,7 @@ namespace MyAssistant.Domain.Models
     /// Represents a user notification entity with properties for title, message, read status,
     /// </summary>
     [Table("Notification")]
-    public class Notification : AuditableEntity
+    public class Notification : EntityBase
     {
         [Required, StringLength(200)]
         public string Title { get; set; } = default!;
