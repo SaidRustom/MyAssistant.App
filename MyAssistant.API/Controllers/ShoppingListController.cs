@@ -19,6 +19,13 @@ public class ShoppingListController(IMediator mediator, IMapper mapper) :
         => await ExecuteAsync<GetShoppingListQuery, ShoppingListDto>
                 (new GetShoppingListQuery() {Id = id}, result => Ok(new ApiResponse<ShoppingListDto>(result, "Success"))); 
     
+    [ProducesResponseType(typeof(ApiResponse<List<ShoppingListDto>>), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(ApiResponse<List<ShoppingListDto>>), StatusCodes.Status404NotFound)]
+    [ProducesResponseType(typeof(ApiResponse<List<ShoppingListDto>>), StatusCodes.Status500InternalServerError)]
+    [HttpGet]
+    public Task<IActionResult> GetTasks([FromQuery] int pageNumber = 1, [FromQuery] int pageSize = 20)
+        => GetListAsync<ShoppingList, ShoppingListDto>(pageNumber, pageSize);
+    
     [HttpPost]
     [ProducesResponseType(typeof(ApiResponse<Guid>), StatusCodes.Status201Created)]
     [ProducesResponseType(typeof(ApiResponse<Guid>), StatusCodes.Status400BadRequest)]

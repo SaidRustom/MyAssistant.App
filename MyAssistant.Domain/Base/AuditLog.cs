@@ -23,6 +23,8 @@ namespace MyAssistant.Domain.Base
 
         public int MyAssistantServiceTypeCode { get; set; } // populated when the audit triggered by a background service..
 
+        public DateTime DateTime { get; set; } = DateTime.Now;
+
         public virtual ICollection<HistoryEntry> HistoryEntries { get; set; } = new List<HistoryEntry>();
 
         public AuditLog() { }

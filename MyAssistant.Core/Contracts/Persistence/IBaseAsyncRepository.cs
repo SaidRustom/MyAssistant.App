@@ -1,4 +1,5 @@
-﻿using MyAssistant.Domain.Interfaces;
+﻿using System.Linq.Expressions;
+using MyAssistant.Domain.Interfaces;
 using MyAssistant.Domain.Lookups;
 
 namespace MyAssistant.Core.Contracts.Persistence
@@ -7,6 +8,13 @@ namespace MyAssistant.Core.Contracts.Persistence
     {
         Task<T> GetByIdAsync(Guid id);
         Task<List<T>> GetAllAsync(Guid userId);
+        
+        Task<(IList<T> Items, int TotalCount)> GetPagedListAsync(
+            Guid userId,
+            Expression<Func<T, bool>> filter,
+            int pageNumber,
+            int pageSize);
+        
         Task<T> AddAsync(T entity);
         Task<int> AddRangeAsync (ICollection<T> entityList);
         Task UpdateRangeAsync(ICollection<T> entityList);

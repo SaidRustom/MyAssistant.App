@@ -1,9 +1,9 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using System.Linq.Expressions;
+using Microsoft.EntityFrameworkCore;
 using MyAssistant.Core.Contracts.Persistence;
 using MyAssistant.Domain.Base;
 using MyAssistant.Domain.Interfaces;
 using MyAssistant.Domain.Lookups;
-using MyAssistant.Shared;
 
 namespace MyAssistant.Persistence.Repositories.Base
 {
@@ -11,7 +11,7 @@ namespace MyAssistant.Persistence.Repositories.Base
         where T : class, IEntityBase
     {
         protected readonly MyAssistantDbContext _context = context;
-
+        
         public virtual async Task<T> GetByIdAsync(Guid id)
         {
             var obj = await _context.Set<T>().FindAsync(id)!;
@@ -42,6 +42,29 @@ namespace MyAssistant.Persistence.Repositories.Base
             }
 
             return list;
+        }
+        
+        public async Task<(IList<T> Items, int TotalCount)> GetPagedListAsync(
+            Guid userId,
+            Expression<Func<T, bool>> filter,
+            int pageNumber,
+            int pageSize)
+        {
+            IQueryable<T> query = _context.Set<T>().Where(x => x.UserId == userId);
+
+            if (filter != null)
+                query = query.Where(filter);
+
+            int totalCount = await query.CountAsync();
+
+            if (typeof(AuditableEntity).IsAssignableFrom(typeof(T)))
+            {
+                query = query.OrderByDescending(x => (x as AuditableEntity)!.AuditLogs.AsQueryable().Max(l => l.DateTime));
+            }
+
+            var items = await query.Skip((pageNumber - 1) * pageSize).Take(pageSize).ToListAsync();
+
+            return (items, totalCount);
         }
 
         public virtual async Task<T> AddAsync(T entity)
