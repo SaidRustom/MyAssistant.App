@@ -10,6 +10,5 @@ namespace MyAssistant.Shared.DTOs
 
         public Guid UserId { get; set; }
 
-        public ICollection<AuditLog> AuditLogs { get; set; } = new List<AuditLog>();
     }
 }
