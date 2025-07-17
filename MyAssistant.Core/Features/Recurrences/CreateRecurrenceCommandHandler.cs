@@ -33,7 +33,6 @@ namespace MyAssistant.Core.Features.Recurrences
 
         public async Task<Guid> Handle(CreateRecurrenceCommand request, CancellationToken cancellation)
         {
-
             var recurrence = _mapper.Map<Recurrence>(request);
             recurrence = await _repo.AddAsync(recurrence);
 
@@ -57,13 +56,15 @@ namespace MyAssistant.Core.Features.Recurrences
                 
                 tasks.Add(item);              
             }
-
+            
+            //Add Range instead of mediator cmd for performance (may have to add 100 tasks..)
+            //TODO: build AddTaskList feature instead
             var addedTaskCount = await _taskRepo.AddRangeAsync(tasks);
 
             CreateNotificationCommand cmd = new(recurrence, recurrence.UserId,
                 "Recurrences added successfully. ", $"{addedTaskCount} Occurrences added for {recurrence.Title}");
 
-            await _mediator.Send(cmd);
+            await _mediator.Send(cmd, cancellation);
 
             return recurrence.Id;
         }
@@ -75,7 +76,7 @@ namespace MyAssistant.Core.Features.Recurrences
         /// The recurrence type (daily, weekly, monthly, annually) and interval are defined
         /// by the Recurrence request parameter.
         /// </summary>
-        public IEnumerable<DateTime> GetRequestOccurrences(Recurrence request)
+        IEnumerable<DateTime> GetRequestOccurrences(Recurrence request)
         {
             List<DateTime> result = new List<DateTime>();
             DateTime occurrence = request.StartDate;

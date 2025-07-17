@@ -11,6 +11,8 @@ namespace MyAssistant.Shared.DTOs
         public Guid UserId { get; set; }
 
         public LookupDto RecurrenceType { get; set; } = default!;
+        
+        public ICollection<TaskItem> TaskItems { get; set; } = new List<TaskItem>(); 
 
         public ICollection<AuditLog> AuditLogs { get; set; } = new List<AuditLog>();
 

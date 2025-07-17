@@ -1,5 +1,4 @@
 ﻿using MediatR;
-using MyAssistant.Domain.Lookups;
 using MyAssistant.Domain.Models;
 using System.ComponentModel.DataAnnotations;
 
@@ -7,8 +6,6 @@ namespace MyAssistant.Shared.DTOs
 {
     public class CreateRecurrenceCommand: IRequest<Guid>, IMapWith<Recurrence>
     {
-        public Guid? Id { get; set; }
-
         [Required]
         public string Title { get; set; } = default!;
 
