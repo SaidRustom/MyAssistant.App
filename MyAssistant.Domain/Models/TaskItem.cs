@@ -34,6 +34,7 @@ namespace MyAssistant.Domain.Models
 
         // IShareable Implementation
         public virtual ICollection<EntityShare>? Shares { get; set; } = new List<EntityShare>();
+        public bool NotifyOwnerOnChange { get; set; }
 
         // Relationships
         public Guid? GoalId { get; set; }

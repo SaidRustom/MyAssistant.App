@@ -22,6 +22,7 @@ namespace MyAssistant.Domain.Models
         public ICollection<Habit> LinkedHabits { get; set; } = new List<Habit>();
 
         public ICollection<EntityShare>? Shares { get; set; } = new List<EntityShare>();
+        public bool NotifyOwnerOnChange { get; set; }
 
         public ICollection<BillingInfo>? Bills { get; set; } = new List<BillingInfo>();
     }
