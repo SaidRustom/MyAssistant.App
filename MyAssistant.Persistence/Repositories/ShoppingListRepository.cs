@@ -2,6 +2,7 @@ using System.Linq.Expressions;
 using Microsoft.EntityFrameworkCore;
 using MyAssistant.Core.Contracts.Persistence;
 using MyAssistant.Domain.Base;
+using MyAssistant.Domain.Lookups;
 using MyAssistant.Domain.Models;
 using MyAssistant.Persistence.Repositories.Base;
 
@@ -49,6 +50,7 @@ public class ShoppingListRepository(MyAssistantDbContext context) : BaseAsyncRep
             foreach (var item in list.Items)
             {
                 await IncludeAuditLogAsync(item);
+                item.RecurrenceType = RecurrenceTypeList.Get(item.RecurrenceTypeCode);
             }
         }
 

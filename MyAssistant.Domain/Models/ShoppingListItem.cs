@@ -27,10 +27,8 @@ namespace MyAssistant.Domain.Models
         public DateTime? LastPurchaseDate { get; set; }
 
         public bool IsRecurring { get; set; }
-
         public int RecurrenceTypeCode { get; set; } = RecurrenceType.None;
-        public RecurrenceType? RecurrenceType { get; set; }
-
+        public RecurrenceType RecurrenceType { get; set; } = default!;
         public DateTime? NextOccurrenceDate { get; set; }
 
         // Relationships
