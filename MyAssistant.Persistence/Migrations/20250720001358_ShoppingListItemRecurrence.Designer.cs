@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using MyAssistant.Persistence;
 
@@ -11,9 +12,11 @@ using MyAssistant.Persistence;
 namespace MyAssistant.Persistence.Migrations
 {
     [DbContext(typeof(MyAssistantDbContext))]
-    partial class MyAssistantDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250720001358_ShoppingListItemRecurrence")]
+    partial class ShoppingListItemRecurrence
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -58,7 +61,7 @@ namespace MyAssistant.Persistence.Migrations
 
                     b.HasIndex("ShoppingListId");
 
-                    b.ToTable("AuditLogs", (string)null);
+                    b.ToTable("AuditLogs");
                 });
 
             modelBuilder.Entity("MyAssistant.Domain.Base.EntityShare", b =>
@@ -122,7 +125,7 @@ namespace MyAssistant.Persistence.Migrations
                     b.HasIndex("EntityId", "EntityType", "SharedWithUserId")
                         .IsUnique();
 
-                    b.ToTable("EntityShare", (string)null);
+                    b.ToTable("EntityShare");
                 });
 
             modelBuilder.Entity("MyAssistant.Domain.Base.HistoryEntry", b =>
@@ -154,7 +157,7 @@ namespace MyAssistant.Persistence.Migrations
 
                     b.HasIndex("AuditLogId");
 
-                    b.ToTable("HistoryEntries", (string)null);
+                    b.ToTable("HistoryEntries");
                 });
 
             modelBuilder.Entity("MyAssistant.Domain.Base.MyAssistantServiceLog", b =>
@@ -179,7 +182,7 @@ namespace MyAssistant.Persistence.Migrations
 
                     b.HasIndex("MyAssistantServiceTypeCode");
 
-                    b.ToTable("MyAssistantServiceLog", (string)null);
+                    b.ToTable("MyAssistantServiceLog");
                 });
 
             modelBuilder.Entity("MyAssistant.Domain.Lookups.ActivityType", b =>
@@ -197,7 +200,7 @@ namespace MyAssistant.Persistence.Migrations
 
                     b.HasKey("Code");
 
-                    b.ToTable("ActivityType", (string)null);
+                    b.ToTable("ActivityType");
 
                     b.HasData(
                         new
@@ -237,7 +240,7 @@ namespace MyAssistant.Persistence.Migrations
 
                     b.HasKey("Code");
 
-                    b.ToTable("AuditActionType", (string)null);
+                    b.ToTable("AuditActionType");
 
                     b.HasData(
                         new
@@ -272,7 +275,7 @@ namespace MyAssistant.Persistence.Migrations
 
                     b.HasKey("Code");
 
-                    b.ToTable("ServiceType", (string)null);
+                    b.ToTable("ServiceType");
                 });
 
             modelBuilder.Entity("MyAssistant.Domain.Lookups.PermissionType", b =>
@@ -290,7 +293,7 @@ namespace MyAssistant.Persistence.Migrations
 
                     b.HasKey("Code");
 
-                    b.ToTable("PermissionType", (string)null);
+                    b.ToTable("PermissionType");
 
                     b.HasData(
                         new
@@ -325,7 +328,7 @@ namespace MyAssistant.Persistence.Migrations
 
                     b.HasKey("Code");
 
-                    b.ToTable("RecurrenceType", (string)null);
+                    b.ToTable("RecurrenceType");
 
                     b.HasData(
                         new
@@ -375,7 +378,7 @@ namespace MyAssistant.Persistence.Migrations
 
                     b.HasKey("Code");
 
-                    b.ToTable("ShoppingListType", (string)null);
+                    b.ToTable("ShoppingListType");
 
                     b.HasData(
                         new
@@ -497,7 +500,7 @@ namespace MyAssistant.Persistence.Migrations
 
                     b.HasIndex("ParentEntityId");
 
-                    b.ToTable("BillingInfo", (string)null);
+                    b.ToTable("BillingInfo");
                 });
 
             modelBuilder.Entity("MyAssistant.Domain.Models.ChatMessage", b =>
@@ -537,7 +540,7 @@ namespace MyAssistant.Persistence.Migrations
 
                     b.HasIndex("UserId", "ReceiverUserId", "SentAt");
 
-                    b.ToTable("ChatMessage", (string)null);
+                    b.ToTable("ChatMessage");
                 });
 
             modelBuilder.Entity("MyAssistant.Domain.Models.Goal", b =>
@@ -566,7 +569,7 @@ namespace MyAssistant.Persistence.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Goal", (string)null);
+                    b.ToTable("Goal");
                 });
 
             modelBuilder.Entity("MyAssistant.Domain.Models.Habit", b =>
@@ -611,7 +614,7 @@ namespace MyAssistant.Persistence.Migrations
 
                     b.HasIndex("RecurrenceId");
 
-                    b.ToTable("Habit", (string)null);
+                    b.ToTable("Habit");
                 });
 
             modelBuilder.Entity("MyAssistant.Domain.Models.Notification", b =>
@@ -656,7 +659,7 @@ namespace MyAssistant.Persistence.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Notification", (string)null);
+                    b.ToTable("Notification");
                 });
 
             modelBuilder.Entity("MyAssistant.Domain.Models.Recurrence", b =>
@@ -700,7 +703,7 @@ namespace MyAssistant.Persistence.Migrations
 
                     b.HasIndex("RecurrenceTypeCode");
 
-                    b.ToTable("Recurrence", (string)null);
+                    b.ToTable("Recurrence");
                 });
 
             modelBuilder.Entity("MyAssistant.Domain.Models.ShoppingList", b =>
@@ -731,7 +734,7 @@ namespace MyAssistant.Persistence.Migrations
 
                     b.HasIndex("ShoppingListTypeCode");
 
-                    b.ToTable("ShoppingList", (string)null);
+                    b.ToTable("ShoppingList");
                 });
 
             modelBuilder.Entity("MyAssistant.Domain.Models.ShoppingListItem", b =>
@@ -784,7 +787,7 @@ namespace MyAssistant.Persistence.Migrations
 
                     b.HasIndex("ShoppingListId");
 
-                    b.ToTable("ShoppingListItem", (string)null);
+                    b.ToTable("ShoppingListItem");
                 });
 
             modelBuilder.Entity("MyAssistant.Domain.Models.TaskItem", b =>
@@ -832,7 +835,7 @@ namespace MyAssistant.Persistence.Migrations
 
                     b.HasIndex("RecurrenceId");
 
-                    b.ToTable("TaskItem", (string)null);
+                    b.ToTable("TaskItem");
                 });
 
             modelBuilder.Entity("MyAssistant.Domain.Models.UserConnection", b =>
@@ -863,7 +866,7 @@ namespace MyAssistant.Persistence.Migrations
                     b.HasIndex("UserId", "FriendUserId")
                         .IsUnique();
 
-                    b.ToTable("UserConnection", (string)null);
+                    b.ToTable("UserConnection");
                 });
 
             modelBuilder.Entity("MyAssistant.Domain.Base.AuditLog", b =>
