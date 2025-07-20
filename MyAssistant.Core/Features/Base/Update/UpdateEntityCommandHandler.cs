@@ -4,6 +4,7 @@ using MediatR;
 using MyAssistant.Core.Contracts.Persistence;
 using MyAssistant.Domain.Interfaces;
 using MyAssistant.Core.Contracts;
+using MyAssistant.Core.Features.Notifications.Handle;
 
 namespace MyAssistant.Core.Features.Base.Update
 {
@@ -21,23 +22,27 @@ namespace MyAssistant.Core.Features.Base.Update
     public class UpdateEntityCommandHandler<TEntity>(
     IBaseAsyncRepository<TEntity> repository,
     ILoggedInUserService loggedInUserService,
-    IServiceProvider serviceProvider)
+    IServiceProvider serviceProvider,
+    IMediator mediator)
     : IUpdateEntityCommandHandler<TEntity>
     where TEntity : class, IEntityBase, new()
     {
         private readonly ILoggedInUserService _loggedInUserService = loggedInUserService;
         private readonly IServiceProvider _serviceProvider = serviceProvider;
+        private readonly IMediator _mediator = mediator;
 
         public async Task<Guid> Handle(UpdateEntityCommand<TEntity> request, CancellationToken cancellationToken)
         {
-            if (request is null) throw new ArgumentNullException(nameof(request));
-            if (request.Entity is null) throw new ArgumentNullException(nameof(request.Entity));
+            ArgumentNullException.ThrowIfNull(request);
+            ArgumentNullException.ThrowIfNull(request.Entity);
 
             await repository.ValidateCanEditAsync(request.Entity.Id, _loggedInUserService.UserId);
 
             await ValidateEntityAsync(request.Entity, cancellationToken);
 
             await repository.UpdateAsync(request.Entity);
+
+            await _mediator.Send(new HandleNotificationsCommand<TEntity>(request.Entity.Id), cancellationToken);
 
             return request.Entity.Id;
         }

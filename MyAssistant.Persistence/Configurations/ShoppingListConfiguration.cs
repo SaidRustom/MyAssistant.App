@@ -8,7 +8,7 @@ namespace MyAssistant.Persistence.Configurations
     {
         public void Configure(EntityTypeBuilder<ShoppingList> builder)
         {
-            builder.Property(x => x.Name)
+            builder.Property(x => x.Title)
                 .IsRequired()
                 .HasMaxLength(200);
 

@@ -1,4 +1,5 @@
 using MediatR;
+using MyAssistant.Core.Contracts.Persistence;
 using MyAssistant.Domain.Interfaces;
 using MyAssistant.Shared;
 

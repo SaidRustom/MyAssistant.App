@@ -205,7 +205,7 @@ namespace MyAssistant.Persistence.Repositories.Base
 
             return shareable;
         }
-
+        
         #endregion       
     }
 }

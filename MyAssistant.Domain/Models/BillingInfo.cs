@@ -8,6 +8,8 @@ namespace MyAssistant.Domain.Models
     public class BillingInfo : AuditableEntity, IShareable<BillingInfo>
     {
         public Guid ParentEntityId { get; set; }
+        
+        public string Title { get; set; } 
 
         public string ParentEntityType { get; set; } = string.Empty;
 
@@ -21,6 +23,7 @@ namespace MyAssistant.Domain.Models
 
         // IShareable Implementation
         public ICollection<EntityShare>? Shares { get; set; } = new List<EntityShare>();
+        public bool NotifyOwnerOnChange { get; set; }
 
         public BillingInfo() { }
 

@@ -30,6 +30,7 @@ namespace MyAssistant.Domain.Models
 
         // IShareable Implementation
         public ICollection<EntityShare>? Shares { get; set; } = new List<EntityShare>();
+        public bool NotifyOwnerOnChange { get; set; }
 
         // IBillable Implementation
         public ICollection<BillingInfo>? Bills { get; set; } = new List<BillingInfo>();
