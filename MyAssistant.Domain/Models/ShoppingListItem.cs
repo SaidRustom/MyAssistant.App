@@ -28,7 +28,7 @@ namespace MyAssistant.Domain.Models
 
         public bool IsRecurring { get; set; }
 
-        public int RecurrenceTypeCode { get; set; }
+        public int RecurrenceTypeCode { get; set; } = RecurrenceType.None;
         public RecurrenceType? RecurrenceType { get; set; }
 
         public DateTime? NextOccurrenceDate { get; set; }
