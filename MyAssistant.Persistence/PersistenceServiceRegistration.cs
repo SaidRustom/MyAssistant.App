@@ -20,6 +20,7 @@ namespace MyAssistant.Persistence
             services.AddScoped<IGoalRepository, GoalRepository>();
             services.AddScoped<INotificationRepository, NotificationRepository>();
             services.AddScoped<IShoppingListRepository, ShoppingListRepository>();
+            services.AddScoped<IChatMessageRepository, ChatMessageRepository>();
 
             return services;
         }
