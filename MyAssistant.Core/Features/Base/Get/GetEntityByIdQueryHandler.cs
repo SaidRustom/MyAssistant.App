@@ -68,17 +68,17 @@ namespace MyAssistant.Core.Features.Base.Get
         /// </summary>
         async void AddPermissionTypeToShareableDtos(TResponse dto)
         {
-            var isShareableDtoInterface = dto
+            var shareableDtoInterface = dto
                 .GetType()
                 .GetInterfaces()
                 .FirstOrDefault(i => i.IsGenericType && i.GetGenericTypeDefinition() == typeof(IShareableDto<>));
 
-            if(isShareableDtoInterface != null)
+            if(shareableDtoInterface != null)
             {
                 var permission = await _repository.GetUserPermissionTypeAsync(dto.Id, _userID);
 
                 //Populate PermissionType in the returned Dto (Interface enforced)
-                var permissionProp = isShareableDtoInterface.GetProperty("PermissionType");
+                var permissionProp = shareableDtoInterface.GetProperty("PermissionType");
                 permissionProp!.SetValue(dto, permission, null);
             }
         }
