@@ -11,7 +11,11 @@ public class ShoppingListDto : CreateOrUpdateShoppingListCommand, IDto<ShoppingL
     public Guid UserId { get; set; }
 
     public DateOnly CreatedDate { get; set; }
-    
+
+    public bool NotifyOwnerOnChange { get; set; }
+
+    public LookupDto ShoppingListType { get; set; }
+
     public ICollection<ShoppingListItemDto> Items { get; set; } = new List<ShoppingListItemDto>();
     
     //TODO: Look into creating dto for shares..
