@@ -11,7 +11,7 @@ public class UserPreferences : EntityBase
 
     public bool EmailNotifications {  get; set; }
 
-    public bool EnableChat { get; set; }
+    public bool EnableChat { get; set; } = true;
 
-    public bool DiscoverableByOtherUsers { get; set; }
+    public bool DiscoverableByOtherUsers { get; set; } = true;
 }
