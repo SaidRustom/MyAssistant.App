@@ -1,5 +1,4 @@
 using MyAssistant.Domain.Base;
-using MyAssistant.Domain.Lookups;
 using MyAssistant.Domain.Models;
 
 namespace MyAssistant.Shared.DTOs;

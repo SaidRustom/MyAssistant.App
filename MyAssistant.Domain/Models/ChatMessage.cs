@@ -8,7 +8,7 @@ namespace MyAssistant.Domain.Models
     /// Represents a chat message entity exchanged between users.
     /// </summary>
     [Table("ChatMessage")]
-    public class ChatMessage : EntityBase
+    public class ChatMessage : EntityBase 
     {
         [Required]
         public Guid ReceiverUserId { get; set; }
