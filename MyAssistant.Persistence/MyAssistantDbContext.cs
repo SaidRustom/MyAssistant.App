@@ -31,6 +31,7 @@ namespace MyAssistant.Persistence
         public DbSet<EntityShare> EntityShares { get; set; } = default!;
         public DbSet<AuditLog> AuditLogs { get; set; } = default!;
         public DbSet<HistoryEntry> HistoryEntries { get; set; } = default!;
+        public DbSet<UserPreferences> UserPreferences { get; set; }
 
         //Lookups
         public DbSet<AuditActionType> AuditActionTypes { get; set; } = default!;

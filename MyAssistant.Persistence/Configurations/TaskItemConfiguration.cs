@@ -21,6 +21,7 @@ namespace MyAssistant.Persistence.Configurations
 
             builder.HasOne(x => x.Recurrence)
                 .WithMany()
+                .HasForeignKey(x => x.RecurrenceId)
                 .OnDelete(DeleteBehavior.NoAction);
 
             builder.HasMany(x => x.Shares)
