@@ -2,11 +2,15 @@
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using MyAssistant.Core.Contracts.Persistence.Service;
+using MyAssistant.Domain.Base;
+using MyAssistant.Domain.Interfaces;
+using MyAssistant.Domain.Lookups;
 
 namespace MyAssistant.Core.Services
 {
-    public class RecurringShoppingListItemActivationService : BackgroundService
+    public class RecurringShoppingListItemActivationService : BackgroundService, IMyAssistantService
     {
+        public int ServiceTypeCode => MyAssistantServiceType.RecurringShoppingListItemActivationService;
         private readonly IServiceProvider _serviceProvider;
 
         public RecurringShoppingListItemActivationService(IServiceProvider serviceProvider)
@@ -26,25 +30,41 @@ namespace MyAssistant.Core.Services
 
         private async Task ProcessRecurringItemsAsync(CancellationToken cancellationToken)
         {
-            using (var scope = _serviceProvider.CreateAsyncScope())
+            try
             {
-                var repo = scope.ServiceProvider.GetRequiredService<IRecurringShoppingListItemActivationRepository>();
-                var mediator = scope.ServiceProvider.GetRequiredService<IMediator>();
-
-                var items = await repo.GetItemsAsync();
-
-                if (items.Count > 0)
+                using (var scope = _serviceProvider.CreateAsyncScope())
                 {
-                    foreach (var item in items)
+                    var repo = scope.ServiceProvider.GetRequiredService<IRecurringShoppingListItemActivationRepository>();
+                    //var mediator = scope.ServiceProvider.GetRequiredService<IMediator>();
+
+                    MyAssistantServiceLog serviceLog = new MyAssistantServiceLog(MyAssistantServiceTypeList.Get(ServiceTypeCode));
+                
+                    await repo.LogServiceStartedAsync(serviceLog);
+                
+                    var items = await repo.GetItemsAsync();
+                
+                    if (items.Count > 0)
                     {
-                        item.IsActive = true;
-                        item.NextOccurrenceDate = null;
-                        //await mediator.Send(new HandleNotificationsCommand<ShoppingList>(item.ShoppingListId));
+                        foreach (var item in items)
+                        {
+                            item.IsActive = true;
+                            item.NextOccurrenceDate = null;
+                            //await mediator.Send(new HandleNotificationsCommand<ShoppingList>(item.ShoppingListId));
+                        }
+
+                        await repo.UpdateItems(items);
                     }
 
-                    await repo.UpdateItems(items);
+                    serviceLog.ResultDescription = $"Activated {items.Count} Items";
+                    await repo.LogServiceEndedAsync(serviceLog);
                 }
             }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                //TODO: Log the exception
+            }
+            
         }
     }
 }

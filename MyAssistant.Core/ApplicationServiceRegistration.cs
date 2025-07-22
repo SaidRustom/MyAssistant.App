@@ -6,7 +6,6 @@ using MyAssistant.Core.Features.Base.Create;
 using MyAssistant.Core.Features.Base.Get;
 using MyAssistant.Core.Features.Base.GetList;
 using MyAssistant.Core.Features.Base.Update;
-using MyAssistant.Core.Features.Notifications.Create;
 using MyAssistant.Core.Features.Notifications.Handle;
 using MyAssistant.Core.Profiles;
 using MyAssistant.Core.Responses;

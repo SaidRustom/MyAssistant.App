@@ -2,6 +2,6 @@
 {
     public interface IMyAssistantService
     {
-        public int ServiceTypeCode { get; set; }
+        public int ServiceTypeCode { get; }
     }
 }
