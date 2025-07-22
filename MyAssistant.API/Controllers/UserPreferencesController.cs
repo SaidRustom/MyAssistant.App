@@ -1,10 +1,10 @@
 ﻿using AutoMapper;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using MyAssistant.Core.Features.UserPreferences.GetAndCreateIfEmpty;
 using MyAssistant.Core.Responses;
 using MyAssistant.Domain.Models;
 using MyAssistant.Shared.DTOs;
-using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
 
 namespace MyAssistant.API.Controllers;
 
@@ -20,19 +20,9 @@ public class UserPreferencesController : MyAssistantBaseController
     [ProducesResponseType(typeof(ApiResponse<UserPreferencesDto>), StatusCodes.Status404NotFound)]
     [ProducesResponseType(typeof(ApiResponse<UserPreferencesDto>), StatusCodes.Status500InternalServerError)]
     public async Task<IActionResult> Get()
-    {
-        var response =  await GetListAsync<UserPreferences, UserPreferencesDto>();
-        if(response is ApiResponse<ICollection<UserPreferencesDto>> apiresponse)
-        {
-            if (apiresponse.Data?.Count == 0)
-                 await CreateAsync<UserPreferences, Guid>(new UserPreferencesDto());
-
-            return await GetListAsync<UserPreferences, UserPreferencesDto>();
-
-        }
-
-        return response;
-    }
+        => await ExecuteAsync<GetUserPreferencesAndCreateIfEmpty, UserPreferencesDto>
+                (new GetUserPreferencesAndCreateIfEmpty(),
+                result => Ok(new ApiResponse<UserPreferencesDto>(result, "Success"))); 
 
     [HttpPut]
     [ProducesResponseType(typeof(ApiResponse<Guid>), StatusCodes.Status200OK)]

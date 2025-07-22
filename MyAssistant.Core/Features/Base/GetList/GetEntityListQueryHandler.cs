@@ -33,7 +33,7 @@ public class GetEntityListQueryHandler<TEntity, TResponse> : IRequestHandler<Get
 
         var dtos = _mapper.Map<List<TResponse>>(entities);
 
-        var shareableDtoInterface = dtos.First()
+        var shareableDtoInterface = dtos.FirstOrDefault()?
                .GetType()
                .GetInterfaces()
                .FirstOrDefault(i => i.IsGenericType && i.GetGenericTypeDefinition() == typeof(IShareableDto<>));
