@@ -3,8 +3,9 @@ using MyAssistant.Domain.Interfaces;
 
 namespace MyAssistant.Core.Features.Notifications.Handle;
 
-public class HandleNotificationsCommand<T>(Guid entityId) : IRequest where T : IEntityBase
+internal class HandleNotificationsCommand<T>(Guid entityId, string? message = null) : IRequest where T : IEntityBase
 {
-    public Guid EntityId { get; set; }
+    public Guid EntityId { get; set; } = entityId;
     
+    public string? Message { get; set; } = message;
 }

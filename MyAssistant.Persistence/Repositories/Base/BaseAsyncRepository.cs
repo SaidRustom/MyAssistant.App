@@ -60,6 +60,7 @@ namespace MyAssistant.Persistence.Repositories.Base
 
             var items = await query.Skip((pageNumber - 1) * pageSize).Take(pageSize).ToListAsync();
 
+            // TODO: Including audit for lists is expensive, but keep for now..
             if (typeof(AuditableEntity).IsAssignableFrom(typeof(T)))
             {
                 foreach (var item in items)
@@ -67,7 +68,7 @@ namespace MyAssistant.Persistence.Repositories.Base
 
                 query = query.OrderByDescending(x => (x as AuditableEntity)!.AuditLogs.AsEnumerable().Max(l => l.DateTime));
             }
-
+            
             if (typeof(IShareable<T>).IsAssignableFrom(typeof(T)))
             {
                 foreach (var item in items)
