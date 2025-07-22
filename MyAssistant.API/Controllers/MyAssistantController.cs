@@ -57,7 +57,7 @@ namespace MyAssistant.API.Controllers
                 var response = await Mediator.Send(request);
                 return onSuccess(response);
             }
-            catch (ValidationException validation)
+            catch (ValidationException validation) //TODO: Log the exceptions
             {
                 return BadRequest(new ApiResponse<TResponse>(
                     validation.Errors,

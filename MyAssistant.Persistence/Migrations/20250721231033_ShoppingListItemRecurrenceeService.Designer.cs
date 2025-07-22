@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using MyAssistant.Persistence;
 
@@ -11,9 +12,11 @@ using MyAssistant.Persistence;
 namespace MyAssistant.Persistence.Migrations
 {
     [DbContext(typeof(MyAssistantDbContext))]
-    partial class MyAssistantDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250721231033_ShoppingListItemRecurrenceeService")]
+    partial class ShoppingListItemRecurrenceeService
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -893,32 +896,6 @@ namespace MyAssistant.Persistence.Migrations
                         .IsUnique();
 
                     b.ToTable("UserConnection");
-                });
-
-            modelBuilder.Entity("MyAssistant.Domain.Models.UserPreferences", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<bool>("DarkMode")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("DiscoverableByOtherUsers")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("EmailNotifications")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("EnableChat")
-                        .HasColumnType("bit");
-
-                    b.Property<Guid>("UserId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("UserPreferences");
                 });
 
             modelBuilder.Entity("MyAssistant.Domain.Base.AuditLog", b =>

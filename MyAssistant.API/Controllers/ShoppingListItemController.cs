@@ -22,7 +22,7 @@ public class ShoppingListItemController(IMediator mediator, IMapper mapper)
     [ProducesResponseType(typeof(ApiResponse<Guid>), StatusCodes.Status400BadRequest)]
     [ProducesResponseType(typeof(ApiResponse<Guid>), StatusCodes.Status500InternalServerError)]
     [ProducesResponseType(typeof(ApiResponse<Guid>), StatusCodes.Status401Unauthorized)]
-    public async Task<IActionResult> Create([FromBody]CreateOrUpdateShoppingListItem command)
+    public async Task<IActionResult> Create([FromBody]CreateOrUpdateShoppingListItemCommand command)
         => await CreateAsync<ShoppingListItem, Guid>(command);
     
     [HttpPut]
@@ -30,7 +30,7 @@ public class ShoppingListItemController(IMediator mediator, IMapper mapper)
     [ProducesResponseType(typeof(ApiResponse<Guid>), StatusCodes.Status400BadRequest)]
     [ProducesResponseType(typeof(ApiResponse<Guid>), StatusCodes.Status500InternalServerError)]
     [ProducesResponseType(typeof(ApiResponse<Guid>), StatusCodes.Status401Unauthorized)]
-    public async Task<IActionResult> Update(CreateOrUpdateShoppingListItem command)
-        => await ExecuteAsync<CreateOrUpdateShoppingListItem, Guid>
+    public async Task<IActionResult> Update(CreateOrUpdateShoppingListItemCommand command)
+        => await ExecuteAsync<CreateOrUpdateShoppingListItemCommand, Guid>
             (command, result => Ok(new ApiResponse<Guid>(result, "Updated successfully.")));
 }

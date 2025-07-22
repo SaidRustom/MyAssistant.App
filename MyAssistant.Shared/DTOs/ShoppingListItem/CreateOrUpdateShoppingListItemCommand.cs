@@ -1,10 +1,11 @@
 using System.ComponentModel.DataAnnotations;
 using MediatR;
+using MyAssistant.Domain.Lookups;
 using MyAssistant.Domain.Models;
 
 namespace MyAssistant.Shared.DTOs;
 
-public class CreateOrUpdateShoppingListItem : IRequest<Guid>, IMapWith<ShoppingListItem>
+public class CreateOrUpdateShoppingListItemCommand : IRequest<Guid>, IMapWith<ShoppingListItem>
 {
     public Guid? Id { get; set; }
     
@@ -17,8 +18,13 @@ public class CreateOrUpdateShoppingListItem : IRequest<Guid>, IMapWith<ShoppingL
 
     [Range(0, 99999)]
     public decimal? UnitPrice { get; set; }
-    
-    public Guid? RecurrenceId { get; set; }
+
+    public bool IsRecurring { get; set; }
+    public int RecurrenceTypeCode { get; set; } = RecurrenceType.None;
+    public DateTime? NextOccurrenceDate { get; set; }
+
+    [Range(0, 30)]
+    public int RecurrenceInterval { get; set; } 
 
     [Required]
     public Guid ShoppingListId { get; set; }

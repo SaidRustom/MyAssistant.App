@@ -25,7 +25,7 @@ namespace MyAssistant.Domain.Base
         public DateTime StartTime { get; set; }
 
         public DateTime? EndTime { get; set; }
-
+        
         public MyAssistantServiceLog() { }
 
         public MyAssistantServiceLog(MyAssistantServiceType serviceType)

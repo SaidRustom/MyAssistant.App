@@ -26,7 +26,7 @@ namespace MyAssistant.Domain.Models
 
         public RecurrenceType RecurrenceType { get; set; } = default!;
         
-        public ICollection<TaskItem> TaskItems { get; set; } = new List<TaskItem>(); 
+        public virtual ICollection<TaskItem> TaskItems { get; set; } = new List<TaskItem>(); 
 
         /// <summary>
         /// in case the task should be scheduled at the same time every ocurrence
