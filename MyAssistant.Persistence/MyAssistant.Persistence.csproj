@@ -18,4 +18,8 @@
     <ProjectReference Include="..\MyAssistant.Core\MyAssistant.Core.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Migrations\" />
+  </ItemGroup>
+
 </Project>

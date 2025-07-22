@@ -6,6 +6,8 @@ using MyAssistant.Core.Contracts.Persistence;
 using MyAssistant.Persistence.Repositories.Base;
 using MyAssistant.Persistence.Repositories;
 using Microsoft.EntityFrameworkCore.Design;
+using MyAssistant.Core.Contracts.Persistence.Service;
+using MyAssistant.Persistence.Repositories.Service;
 
 namespace MyAssistant.Persistence
 {
@@ -20,6 +22,9 @@ namespace MyAssistant.Persistence
             services.AddScoped<IGoalRepository, GoalRepository>();
             services.AddScoped<INotificationRepository, NotificationRepository>();
             services.AddScoped<IShoppingListRepository, ShoppingListRepository>();
+            services.AddScoped<IRecurrenceRepository, RecurrenceRepository>();
+
+            services.AddScoped<IRecurringShoppingListItemActivationRepository, RecurringShoppingListItemActivationRepository>();
 
             return services;
         }

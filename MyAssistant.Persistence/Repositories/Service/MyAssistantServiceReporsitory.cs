@@ -1,7 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using MyAssistant.Domain.Base;
-using MyAssistant.Domain.Interfaces;
-using MyAssistant.Domain.Lookups;
 
 namespace MyAssistant.Persistence.Repositories.Service
 {

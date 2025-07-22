@@ -17,11 +17,12 @@ namespace MyAssistant.Persistence.Configurations
 
             builder.HasOne(x => x.LinkedGoal)
                 .WithMany(g => g.LinkedTasks)
+                .HasForeignKey(x => x.GoalId)
                 .OnDelete(DeleteBehavior.NoAction);
 
             builder.HasOne(x => x.Recurrence)
-                .WithMany()
-                .HasForeignKey(x => x.RecurrenceId)
+                .WithMany(x => x.TaskItems)
+                .HasForeignKey(x=> x.RecurrenceId)
                 .OnDelete(DeleteBehavior.NoAction);
 
             builder.HasMany(x => x.Shares)

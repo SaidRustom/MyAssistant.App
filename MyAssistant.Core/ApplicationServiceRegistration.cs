@@ -6,8 +6,10 @@ using MyAssistant.Core.Features.Base.Create;
 using MyAssistant.Core.Features.Base.Get;
 using MyAssistant.Core.Features.Base.GetList;
 using MyAssistant.Core.Features.Base.Update;
+using MyAssistant.Core.Features.Notifications.Handle;
 using MyAssistant.Core.Profiles;
 using MyAssistant.Core.Responses;
+using MyAssistant.Core.Services;
 using MyAssistant.Domain.Interfaces;
 using MyAssistant.Shared;
 
@@ -20,9 +22,12 @@ namespace MyAssistant.Core
             services.AddAutoMapper(typeof(MappingProfiles));
 
             services.AddMediatR(cfg => cfg.RegisterServicesFromAssemblies(AppDomain.CurrentDomain.GetAssemblies()));
-            
+
             // FluentValidation.AspNetCore package does auto-registration nicely:
             services.AddValidatorsFromAssembly(Assembly.GetExecutingAssembly());
+
+            //Background Services
+            services.AddHostedService<RecurringShoppingListItemActivationService>();
 
             // Register closed generic types
             // Find all types implementing IEntityBase (not abstract, not interface)
@@ -73,7 +78,16 @@ namespace MyAssistant.Core
                 var updateEntityHandlerType = typeof(UpdateEntityCommandHandler<>).MakeGenericType(entityType);
                 var updateEntityServiceType = typeof(IRequestHandler<,>).MakeGenericType(updateEntityRequestType, typeof(Guid));
                 services.AddScoped(updateEntityServiceType, updateEntityHandlerType);
+
+                //Handle Notification MediatR Handler..
+                var handleNotificationRequestType = typeof(HandleNotificationsCommand<>).MakeGenericType(entityType);
+                var handleNotificationHandlerType = typeof(HandleNotificationsCommandHandler<>).MakeGenericType(entityType);
+                var handleNotificationServiceType = typeof(IRequestHandler<>).MakeGenericType(handleNotificationRequestType);
+
+                services.AddScoped(handleNotificationServiceType, handleNotificationHandlerType);
+
             }
+
             return services;
         }
     }

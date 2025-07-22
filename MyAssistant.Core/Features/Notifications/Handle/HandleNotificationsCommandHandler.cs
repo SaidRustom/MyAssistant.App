@@ -6,7 +6,7 @@ using MyAssistant.Domain.Interfaces;
 
 namespace MyAssistant.Core.Features.Notifications.Handle;
 
-public class HandleNotificationsCommandHandler<T> : IRequestHandler<HandleNotificationsCommand<T>>
+internal class HandleNotificationsCommandHandler<T> : IRequestHandler<HandleNotificationsCommand<T>>
 where T : IEntityBase
 {
     private readonly ILoggedInUserService _loggedInUserService;
@@ -29,10 +29,13 @@ where T : IEntityBase
         {
             var entity = await _entityRepo.GetByIdAsync(request.EntityId) as IShareable<T>;
 
+            if (string.IsNullOrEmpty(request.Message))
+                request.Message = $"New updates on {entity.Title} may require your attention";
+
             //Notify the owner of the entity
             if (_loggedInUserService.UserId != entity.UserId && entity.NotifyOwnerOnChange)
             {
-                await _mediator.Send(new CreateNotificationCommand(entity, entity.UserId, $"New updates on {entity.Title} may require your attention"),cancellationToken);
+                await _mediator.Send(new CreateNotificationCommand(entity, entity.UserId, request.Message),cancellationToken);
             }
             
             //Then notify the people the entity is shared with
@@ -40,7 +43,7 @@ where T : IEntityBase
             {
                 if (share.NotifyUserOnChange && share.UserId != _loggedInUserService.UserId)
                 {
-                    await _mediator.Send(new CreateNotificationCommand(entity, share.UserId, $"New updates on {entity.Title} may require your attention"),cancellationToken);
+                    await _mediator.Send(new CreateNotificationCommand(entity, share.UserId, request.Message),cancellationToken);
                 }
             }
         }

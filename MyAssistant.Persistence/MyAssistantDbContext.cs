@@ -38,6 +38,7 @@ namespace MyAssistant.Persistence
         public DbSet<PermissionType> PermissionTypes { get; set; } = default!;
         public DbSet<RecurrenceType> RecurrenceTypes { get; set; } = default!;
         public DbSet<ActivityType> ShoppingItemActivityTypes { get; set; } = default!;
+        public DbSet<MyAssistantServiceType> MyAssistantServiceTypes { get; set; } = default!;
 
         /// <summary>
         /// Log created/updated date 
@@ -233,7 +234,7 @@ namespace MyAssistant.Persistence
                 new ShoppingListType { Code = 15, Description = "Furniture" }
                 );
 
-            //modelBuilder.Entity<MyAssistantServiceType>().HasData(new MyAssistantServiceType { Code = 1, Description = "" });
+            modelBuilder.Entity<MyAssistantServiceType>().HasData(new MyAssistantServiceType { Code = 1, Description = "Recurring Shopping List Item Activation Service" });
 
             #endregion
         }
